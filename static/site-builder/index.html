@@ -14,13 +14,12 @@
         <div class="character" style="top: 70%; left: 15%; font-size: 25px;">(ﾉ◕ヮ◕)ﾉ*:･ﾟ✧</div>
         <div class="character" style="top: 50%; left: 70%; font-size: 35px;">(づ｡◕‿‿◕｡)づ</div>
     </div>
-    
+
     <header class="header" style="display: flex; justify-content: space-between; align-items: center;">
         <div class="logo">
             <img src="https://i.imgur.com/VQ2eNhq.jpeg" alt="Aina-chan" class="logo-img">
             <h1 class="logo-text">Aina's HTML Playground</h1>
         </div>
-        <!-- Top Right Buttons -->
         <div class="header-buttons" style="display: flex; gap: 10px;">
             <button class="btn" id="deploy-btn">
                 <i class="fas fa-rocket"></i> Deploy
@@ -33,7 +32,11 @@
             </button>
         </div>
     </header>
-    
+
+    <div class="site-title-input" style="padding: 15px; text-align: center;">
+        <input type="text" id="site-title" class="form-control" placeholder="Enter site title (e.g. my-kawaii-page)" style="max-width: 400px; margin: 0 auto;">
+    </div>
+
     <div class="container">
         <div class="panes-container">
             <div class="editor-pane">
@@ -45,7 +48,7 @@
                     <textarea id="html-code" placeholder="Write your HTML here, senpai~ (◕‿◕✿)"></textarea>
                 </div>
             </div>
-            
+
             <div class="preview-pane">
                 <div class="pane-header">
                     <i class="fas fa-eye"></i>
@@ -56,7 +59,7 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="generate-form">
             <div class="form-header">
                 <i class="fas fa-magic"></i>
@@ -73,19 +76,17 @@
             </form>
         </div>
     </div>
-    
+
     <footer class="footer">
         <p>Made with ♥ by Aina-chan | HTML Playground v1.0</p>
     </footer>
-    
-    <!-- Floating Action Button for Settings -->
+
     <div id="fab" style="position: fixed; bottom: 20px; right: 20px;">
         <button class="btn" style="border-radius: 50%; width: 60px; height: 60px; padding: 0; display: flex; justify-content: center; align-items: center;">
             <i class="fas fa-cog" style="font-size: 1.5rem;"></i>
         </button>
     </div>
-    
-    <!-- Settings Panel (hidden by default) -->
+
     <div id="settings-panel" style="position: fixed; bottom: 100px; right: 20px; background: white; border-radius: 15px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); padding: 20px; width: 300px; display: none; z-index: 20;">
         <h3 style="margin-bottom: 15px; color: var(--secondary);">AI Setup</h3>
         <form id="ai-setup-form">
@@ -115,26 +116,6 @@
         </form>
     </div>
 
-    <!-- Deployment Modal -->
-    <div id="deploy-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000;">
-        <div style="background: white; width: 400px; padding: 20px; border-radius: 10px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
-            <div class="modal-header" style="margin-bottom: 15px;">
-                <h3 style="color: var(--secondary);"><i class="fas fa-rocket"></i> Deploy Your Site</h3>
-            </div>
-            <div class="modal-body">
-                <input type="text" id="site-title" class="form-control" placeholder="Enter site title (e.g. my-kawaii-page)" style="margin-bottom: 15px;">
-                <div style="display: flex; gap: 10px; justify-content: flex-end;">
-                    <button class="btn" onclick="document.getElementById('deploy-modal').style.display = 'none'">
-                        Cancel
-                    </button>
-                    <button class="btn" id="confirm-deploy">
-                        <i class="fas fa-paper-plane"></i> Deploy
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-        
     <script type="module" src="scripts/main.js"></script>
 </body>
 </html>

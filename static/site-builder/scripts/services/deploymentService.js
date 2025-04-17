@@ -1,19 +1,18 @@
-
 /**
  * Set up deployment functionality
  * @param {HTMLTextAreaElement} htmlCode - The HTML editor element
  */
 function setupDeployment(htmlCode) {
-    // Open deployment modal
-    document.getElementById('deploy-btn').addEventListener('click', () => {
-        document.getElementById('deploy-modal').style.display = 'block';
-    });
+    // Get the deploy button element
+    const deployBtn = document.getElementById('deploy-btn');
+    // Get the site title input element
+    const siteTitleInput = document.getElementById('site-title');
 
-    // Handle deployment confirmation
-    document.getElementById('confirm-deploy').addEventListener('click', async () => {
-        const title = document.getElementById('site-title').value;
+    // Handle deployment when the deploy button is clicked
+    deployBtn.addEventListener('click', async () => {
+        const title = siteTitleInput.value;
         const content = htmlCode.value;
-        
+
         if (!title) {
             alert('Please enter a site title!');
             return;
@@ -32,7 +31,7 @@ function setupDeployment(htmlCode) {
             });
 
             const result = await response.json();
-            
+
             if (response.ok) {
                 showNotification(`Site deployed successfully! 🎉 Access it at <a href="/${result.path}" target="_blank">${result.path}</a>`, 'success');
             } else {
@@ -42,8 +41,5 @@ function setupDeployment(htmlCode) {
             console.error('Deployment error:', error);
             showNotification('Yabai! Deployment failed (╥﹏╥)', 'error');
         }
-        
-        document.getElementById('deploy-modal').style.display = 'none';
-        document.getElementById('site-title').value = '';
     });
 }
