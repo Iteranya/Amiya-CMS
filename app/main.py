@@ -1,16 +1,21 @@
 # The FastAPI stuff~
 
 from fastapi import FastAPI, HTTPException
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, FileResponse
 from app.crud import get_page_by_slug, list_pages
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
+from app.routes import admin
 
 app = FastAPI(
     title="AmiyaCMS",
     description="A cute tiny little CMS for smol projects",
     version="0.1.0",
 )
+
+# Include Routers
+
+app.include_router(admin.router)
 
 # Static assets (if you need to serve logos, favicons, etc.)
 app.mount("/static", StaticFiles(directory="static"), name="static")
@@ -42,10 +47,16 @@ async def render_site(slug: str):
         raise HTTPException(status_code=404, detail="Page not found")
     return HTMLResponse(content=page.html, status_code=200)
 
-# Optionally: API endpoint to fetch page metadata (JSON)
+# Admin Route
+@app.get("/admin", response_class=FileResponse)
+async def admin_ui():
+    return FileResponse("static/admin.html")
+
+# Just in case someone want to add SPA functionality
 @app.get("/api/site/{slug}")
 async def api_site(slug: str):
     page = get_page_by_slug(slug)
     if not page:
         raise HTTPException(status_code=404, detail="Page not found")
     return page.__dict__
+
