@@ -1,0 +1,155 @@
+body {
+    font-family: sans-serif;
+    line-height: 1.6;
+    margin: 20px;
+    background-color: #f4f4f4;
+}
+
+h1, h2 {
+    color: #333;
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 5px;
+}
+
+#edit-area, #list-area {
+    background-color: #fff;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+input[type="text"],
+textarea {
+    width: 95%; /* Allow some padding */
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+button {
+    padding: 10px 15px;
+    margin-right: 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1em;
+}
+
+button[type="submit"], #save-button {
+    background-color: #28a745; /* Green */
+    color: white;
+}
+button[type="submit"]:hover, #save-button:hover {
+    background-color: #218838;
+}
+
+button[type="button"]#clear-button {
+    background-color: #ffc107; /* Yellow */
+    color: #333;
+}
+button[type="button"]#clear-button:hover {
+    background-color: #e0a800;
+}
+
+button[type="button"]#site-builder-button {
+    background-color: #007bff; /* Blue */
+    color: white;
+}
+button[type="button"]#site-builder-button:hover {
+    background-color: #0056b3;
+}
+button[type="button"]#site-builder-button:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+}
+
+
+.form-buttons {
+    margin-top: 15px;
+}
+
+
+#search-box {
+    width: 50%;
+    margin-bottom: 15px;
+}
+
+#pages-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+#pages-table th, #pages-table td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: left;
+}
+
+#pages-table th {
+    background-color: #e9ecef;
+}
+
+#pages-table tbody tr:nth-child(odd) {
+    background-color: #f8f9fa;
+}
+
+#pages-table tbody tr:hover {
+    background-color: #e2e6ea;
+}
+
+
+.action-button {
+    padding: 5px 10px;
+    margin-right: 5px;
+    font-size: 0.9em;
+}
+
+.edit-button {
+    background-color: #17a2b8; /* Teal */
+    color: white;
+}
+.edit-button:hover {
+    background-color: #138496;
+}
+
+.delete-button {
+    background-color: #dc3545; /* Red */
+    color: white;
+}
+.delete-button:hover {
+    background-color: #c82333;
+}
+
+.status {
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    font-weight: bold;
+    display: none; /* Hidden by default */
+}
+.status.success {
+    background-color: #d4edda; /* Light green */
+    color: #155724;
+    border: 1px solid #c3e6cb;
+    display: block;
+}
+.status.error {
+    background-color: #f8d7da; /* Light red */
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+    display: block;
+}

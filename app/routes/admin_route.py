@@ -11,28 +11,22 @@ router = APIRouter(prefix="/admin", tags=["Admin"])
 @router.post("/add")
 async def add_page(
     title: str = Form(...),
-    url: str = Form(...),
     content: str = Form(...),
-    content_length: int = Form(...),
     markdown: str = Form(...),
-    images: str = Form("[]"),  # JSON string of Image list
+    tags:str = Form("[]"),
     html: str = Form(...),
     slug: str = Form(...)
 ):
     try:
         # Convert JSON string to Python list for images
-        import json
-        image_list = json.loads(images)
 
         # Build Page object
         page = Page(
             title=title,
-            url=url,
             content=content,
-            content_length=content_length,
             markdown=markdown,
-            images=image_list,
             html=html,
+            tags= tags,
             slug=slug
         )
         page_id = create_page(page)

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Page Management</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <h1>Page Management</h1>
+
+    <div id="status-message" class="status"></div>
+
+    <div id="edit-area">
+        <h2>Add/Edit Page</h2>
+        <form id="page-form">
+            <input type="hidden" id="edit-slug" name="edit_slug">
+
+            <label for="title">Title:</label>
+            <input type="text" id="title" name="title" required>
+
+            <label for="slug">Slug:</label>
+            <input type="text" id="slug" name="slug" required pattern="[a-z0-9\-]+" title="Use only lowercase letters, numbers, and hyphens">
+
+            <label for="tags">Tags (comma-separated):</label>
+            <input type="text" id="tags" name="tags" placeholder="e.g., blog,tech,news">
+
+            <label for="markdown">Markdown:</label>
+            <textarea id="markdown" name="markdown" rows="10"></textarea>
+
+            <label for="content">Content (HTML - often generated, edit if needed):</label>
+            <textarea id="content" name="content" rows="10"></textarea>
+
+            <label for="html">Generated HTML (if separate):</label>
+            <textarea id="html" name="html" rows="5" placeholder="HTML version of content/markdown"></textarea>
+
+            <div class="form-buttons">
+                <button type="submit" id="save-button">Add Page</button>
+                <button type="button" id="clear-button">Clear Form</button>
+                <button type="button" id="site-builder-button" disabled>Go to Site Builder</button>
+                 </div>
+        </form>
+    </div>
+
+    <hr>
+
+    <div id="list-area">
+        <h2>Existing Pages</h2>
+        <input type="text" id="search-box" placeholder="Search by Title or Slug...">
+        <table id="pages-table">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Slug</th>
+                    <th>Tags</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                </tbody>
+        </table>
+    </div>
+
+    <script type="module" src="scripts/main.js"></script>body>
+</html>

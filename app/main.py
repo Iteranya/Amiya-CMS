@@ -5,7 +5,7 @@ from fastapi.responses import HTMLResponse, FileResponse
 from app.crud import get_page_by_slug, list_pages
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
-from app.routes import admin, aina_route, aiconfig_route
+from app.routes import admin_route, aina_route, aiconfig_route
 
 app = FastAPI(
     title="AmiyaCMS",
@@ -15,7 +15,7 @@ app = FastAPI(
 
 # Include Routers
 
-app.include_router(admin.router)
+app.include_router(admin_route.router)
 app.include_router(aina_route.router)
 app.include_router(aiconfig_route.router)
 
@@ -52,7 +52,7 @@ async def render_site(slug: str):
 # Admin Route
 @app.get("/admin", response_class=FileResponse)
 async def admin_ui():
-    return FileResponse("static/admin.html")
+    return FileResponse("static/admin-panel/index.html")
 
 # Just in case someone want to add SPA functionality
 @app.get("/api/site/{slug}")
