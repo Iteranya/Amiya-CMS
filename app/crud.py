@@ -28,7 +28,19 @@ def list_pages() -> List[Page]:
 def delete_page(slug: str) -> int:
     return db.remove(SiteQuery.slug == slug)
 
-# Update a Page by slug
+# Update a Page by slug, make new if don't exist
 def update_page(slug: str, updated_data: dict) -> bool:
-    result = db.update(updated_data, SiteQuery.slug == slug)
-    return bool(result)
+    # Try to find the document with the given slug
+    existing_doc = db.get(SiteQuery.slug == slug)
+    
+    if existing_doc:
+        # Document exists, update it
+        result = db.update(updated_data, SiteQuery.slug == slug)
+        return bool(result)
+    else:
+        # Document doesn't exist, create it
+        # Make sure the slug is included in the data
+        new_data = updated_data.copy()
+        new_data['slug'] = slug
+        db.insert(new_data)
+        return True

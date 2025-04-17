@@ -5,7 +5,7 @@ from fastapi.responses import HTMLResponse, FileResponse
 from app.crud import get_page_by_slug, list_pages
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
-from app.routes import admin, aina
+from app.routes import admin, aina_route
 
 app = FastAPI(
     title="AmiyaCMS",
@@ -16,10 +16,11 @@ app = FastAPI(
 # Include Routers
 
 app.include_router(admin.router)
-app.include_router(aina.router)
+app.include_router(aina_route.router)
 
 # Static assets (if you need to serve logos, favicons, etc.)
 app.mount("/static", StaticFiles(directory="static"), name="static")
+app.mount("/templates", StaticFiles(directory="templates"), name="templates")
 
 # Allow your local admin tools to talk to it (adjust as needed)
 app.add_middleware(

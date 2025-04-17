@@ -4,19 +4,25 @@ import asyncio
 from concurrent.futures import ThreadPoolExecutor
 import json
 import asyncio
+import crud
 from openai import OpenAI
 
 # Create a thread pool for CPU-bound tasks
 executor = ThreadPoolExecutor()
 
+# Change this part to go with database.
 def save_html(html_content, file_name):
     """Save HTML content to file - this can run in a separate thread"""
-    output_path = f"app/data/drafts/{file_name}"
+    # output_path = f"app/data/drafts/{file_name}"
     # Open file in text write mode (not binary)
-    with open(output_path, 'w', encoding='utf-8') as file:
-        file.write(html_content)
+    # with open(output_path, 'w', encoding='utf-8') as file:
+    #     file.write(html_content)
     
-    print(f"HTML successfully saved to {output_path}")
+    # print(f"HTML successfully saved to {output_path}")
+    dict = crud.get_page_by_slug(file_name)
+    dict.html = html_content
+    crud.update_page(file_name,dict)
+    output_path = f"Saved successfully~ Everything is saved in: sites/{file_name}"
     return output_path
 
 def process_website_request(title, content):
@@ -33,7 +39,8 @@ def process_website_request(title, content):
         
         # Save the HTML file
         filename = title_to_filename(filename)
-        save_html(website_html, f"{filename}.html")
+        # save_html(website_html, f"{filename}.html") Remove the .html, filename is now slug
+        save_html(website_html, f"{filename}")
         
         print(f"Successfully processed website request: {title}")
 
