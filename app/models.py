@@ -14,10 +14,10 @@ class Image:
 @dataclass
 class Page:
     title: str
-    content: str
-    markdown: str
-    html: str
     slug: str
+    content: Optional[str] = None
+    markdown: Optional[str] = None
+    html: Optional[str] = None
     url: Optional[str] = None
     content_length: Optional[int] = None
     tags: Optional[List[str]] = None

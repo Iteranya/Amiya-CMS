@@ -1,17 +1,20 @@
 # The FastAPI stuff~
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import HTMLResponse, FileResponse
 from app.crud import get_page_by_slug, list_pages
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 from app.routes import admin_route, aina_route, aiconfig_route
+from fastapi.templating import Jinja2Templates
 
 app = FastAPI(
     title="AmiyaCMS",
     description="A cute tiny little CMS for smol projects",
     version="0.1.0",
 )
+
+templates = Jinja2Templates(directory="templates")
 
 # Include Routers
 
@@ -33,13 +36,9 @@ app.add_middleware(
 
 # Root: simple welcome or site list
 @app.get("/", response_class=HTMLResponse)
-async def home():
+async def home(request: Request):
     pages = list_pages()
-    list_html = "<h1>Available Pages</h1><ul>"
-    for page in pages:
-        list_html += f'<li><a href="/site/{page.slug}">{page.title}</a></li>'
-    list_html += "</ul>"
-    return list_html
+    return templates.TemplateResponse("index.html", {"request": request, "pages": pages})
 
 # Dynamic route to serve saved pages as raw HTML
 @app.get("/site/{slug}", response_class=HTMLResponse)

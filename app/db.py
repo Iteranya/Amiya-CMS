@@ -10,5 +10,9 @@ DB_PATH = 'data/website_data.json'
 # Initialize TinyDB with caching for performance
 db = TinyDB(DB_PATH, storage=CachingMiddleware(JSONStorage))
 
+def flush_db():
+    db.storage.flush()
+
+
 # Handy reference for queries
 SiteQuery = Query()

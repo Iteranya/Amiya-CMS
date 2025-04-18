@@ -9,27 +9,11 @@ router = APIRouter(prefix="/admin", tags=["Admin"])
 
 
 # Add a new page
-@router.post("/add")
-async def add_page(
-    title: str = Form(...),
-    content: str = Form(...),
-    markdown: str = Form(...),
-    tags: Optional[List[str]] = Form(...),
-    html: str = Form(...),
-    slug: str = Form(...)
-):
+@router.post("/add", response_model=dict)
+async def add_page(page: Page):
     try:
-        # Convert JSON string to Python list for images
-
-        # Build Page object
-        page = Page(
-            title=title,
-            content=content,
-            markdown=markdown,
-            html=html,
-            tags= tags,
-            slug=slug
-        )
+        # The incoming data is already a Page object thanks to Pydantic
+        # No need to construct a new Page object
         page_id = create_page(page)
         return {"message": "Page created successfully", "id": page_id}
     except ValidationError as e:

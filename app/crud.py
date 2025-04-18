@@ -1,13 +1,15 @@
 from typing import List, Optional
 from tinydb import where
-from app.db import db, SiteQuery
+from app.db import db, SiteQuery, flush_db
 from app.models import Page, Image
 from pydantic import TypeAdapter
 
 # Save a Page to the DB
 def create_page(page: Page) -> int:
     data = page.__dict__
-    return db.insert(data)
+    doc_id = db.insert(data)
+    flush_db()  # Ensure data is written to disk
+    return doc_id
 
 def get_page_by_slug(slug: str) -> Optional[Page]:
     result = db.search(SiteQuery.slug == slug)
@@ -26,7 +28,9 @@ def list_pages() -> List[Page]:
 
 # Delete a Page by slug
 def delete_page(slug: str) -> int:
-    return db.remove(SiteQuery.slug == slug)
+    result = db.remove(SiteQuery.slug == slug)
+    flush_db()  # Ensure data is written to disk
+    return result
 
 # Update a Page by slug, make new if don't exist
 def update_page(slug: str, updated_data: dict) -> bool:
@@ -36,6 +40,7 @@ def update_page(slug: str, updated_data: dict) -> bool:
     if existing_doc:
         # Document exists, update it
         result = db.update(updated_data, SiteQuery.slug == slug)
+        flush_db()
         return bool(result)
     else:
         # Document doesn't exist, create it
@@ -43,4 +48,5 @@ def update_page(slug: str, updated_data: dict) -> bool:
         new_data = updated_data.copy()
         new_data['slug'] = slug
         db.insert(new_data)
+        flush_db()
         return True

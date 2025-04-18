@@ -8,7 +8,7 @@ function setupEffects() {
     addAnimationStyles();
     
     // Set up the flower trail effect on mouse move
-    document.addEventListener('mousemove', createFlowerTrail);
+    // document.addEventListener('mousemove', createFlowerTrail);
 }
 
 /**
