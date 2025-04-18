@@ -6,3 +6,4 @@ raw_data.jsonl
 init.py
 __pycache__
 ai_config.json
+clean_up.py
