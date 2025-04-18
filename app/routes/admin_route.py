@@ -1,3 +1,4 @@
+from typing import List, Optional
 from fastapi import APIRouter, HTTPException, Form
 from app.models import Page
 from app.crud import create_page, delete_page, update_page, get_page_by_slug, list_pages
@@ -13,7 +14,7 @@ async def add_page(
     title: str = Form(...),
     content: str = Form(...),
     markdown: str = Form(...),
-    tags:str = Form("[]"),
+    tags: Optional[List[str]] = Form(...),
     html: str = Form(...),
     slug: str = Form(...)
 ):

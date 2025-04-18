@@ -4,63 +4,571 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Page Management</title>
-    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+    font-family: sans-serif;
+    line-height: 1.6;
+    margin: 20px;
+    background-color: #f4f4f4;
+}
+
+h1, h2 {
+    color: #333;
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 5px;
+}
+
+#edit-area, #list-area {
+    background-color: #fff;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+input[type="text"],
+textarea {
+    width: 95%; /* Allow some padding */
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+button {
+    padding: 10px 15px;
+    margin-right: 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1em;
+}
+
+button[type="submit"], #save-button {
+    background-color: #28a745; /* Green */
+    color: white;
+}
+button[type="submit"]:hover, #save-button:hover {
+    background-color: #218838;
+}
+
+button[type="button"]#clear-button {
+    background-color: #ffc107; /* Yellow */
+    color: #333;
+}
+button[type="button"]#clear-button:hover {
+    background-color: #e0a800;
+}
+
+button[type="button"]#site-builder-button {
+    background-color: #007bff; /* Blue */
+    color: white;
+}
+button[type="button"]#site-builder-button:hover {
+    background-color: #0056b3;
+}
+button[type="button"]#site-builder-button:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+}
+
+
+.form-buttons {
+    margin-top: 15px;
+}
+
+
+#search-box {
+    width: 50%;
+    margin-bottom: 15px;
+}
+
+#pages-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+#pages-table th, #pages-table td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: left;
+}
+
+#pages-table th {
+    background-color: #e9ecef;
+}
+
+#pages-table tbody tr:nth-child(odd) {
+    background-color: #f8f9fa;
+}
+
+#pages-table tbody tr:hover {
+    background-color: #e2e6ea;
+}
+
+
+.action-button {
+    padding: 5px 10px;
+    margin-right: 5px;
+    font-size: 0.9em;
+}
+
+.edit-button {
+    background-color: #17a2b8; /* Teal */
+    color: white;
+}
+.edit-button:hover {
+    background-color: #138496;
+}
+
+.delete-button {
+    background-color: #dc3545; /* Red */
+    color: white;
+}
+.delete-button:hover {
+    background-color: #c82333;
+}
+
+.status {
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    font-weight: bold;
+    display: none; /* Hidden by default */
+}
+.status.success {
+    background-color: #d4edda; /* Light green */
+    color: #155724;
+    border: 1px solid #c3e6cb;
+    display: block;
+}
+.status.error {
+    background-color: #f8d7da; /* Light red */
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+    display: block;
+}
+
+.tab-container {
+    margin-bottom: 20px;
+}
+
+.tabs {
+    display: flex;
+    margin-bottom: -1px; /* Align with content */
+}
+
+.tab-button {
+    padding: 10px 20px;
+    background: #e9ecef;
+    border: 1px solid #ddd;
+    border-bottom: none;
+    cursor: pointer;
+    border-radius: 5px 5px 0 0;
+    margin-right: 5px;
+}
+
+.tab-button.active {
+    background: #fff;
+    border-color: #ccc;
+    font-weight: bold;
+}
+
+.tab-content {
+    display: none;
+    background: #fff;
+    border: 1px solid #ddd;
+    padding: 20px;
+    border-radius: 0 5px 5px 5px;
+}
+
+.tab-content.active {
+    display: block;
+}
+    </style>
 </head>
 <body>
 
-    <h1>Page Management</h1>
+    <body>
+        <h1>Page Management</h1>
+        <div id="status-message" class="status"></div>
+    
+        <!-- Added Tab Structure -->
+        <div class="tab-container">
+            <div class="tabs">
+                <button class="tab-button active" data-tab="edit-tab">Edit Pages</button>
+                <button class="tab-button" data-tab="manage-tab">Manage Pages</button>
+            </div>
+    
+            <!-- Edit Tab -->
+            <div id="edit-tab" class="tab-content active">
+                <!-- Existing edit-area content here -->
+                <div id="edit-area">
+                    <h2>Add/Edit Page</h2>
+                    <form id="page-form">
+                        <input type="hidden" id="edit-slug" name="edit_slug">
 
-    <div id="status-message" class="status"></div>
+                        <label for="title">Title:</label>
+                        <input type="text" id="title" name="title" required>
 
-    <div id="edit-area">
-        <h2>Add/Edit Page</h2>
-        <form id="page-form">
-            <input type="hidden" id="edit-slug" name="edit_slug">
+                        <label for="slug">Slug:</label>
+                        <input type="text" id="slug" name="slug" required pattern="[a-z0-9\-]+" title="Use only lowercase letters, numbers, and hyphens">
 
-            <label for="title">Title:</label>
-            <input type="text" id="title" name="title" required>
+                        <label for="tags">Tags:</label>
+                        <input type="text" id="tags" name="tags" placeholder="e.g., blog,tech,news">
 
-            <label for="slug">Slug:</label>
-            <input type="text" id="slug" name="slug" required pattern="[a-z0-9\-]+" title="Use only lowercase letters, numbers, and hyphens">
+                        <label for="markdown">Markdown:</label>
+                        <textarea id="markdown" name="markdown" rows="10"></textarea>
 
-            <label for="tags">Tags (comma-separated):</label>
-            <input type="text" id="tags" name="tags" placeholder="e.g., blog,tech,news">
+                        <label for="content">Content (HTML - often generated, edit if needed):</label>
+                        <textarea id="content" name="content" rows="10"></textarea>
 
-            <label for="markdown">Markdown:</label>
-            <textarea id="markdown" name="markdown" rows="10"></textarea>
+                        <label for="html">Generated HTML (if separate):</label>
+                        <textarea id="html" name="html" rows="5" placeholder="HTML version of content/markdown"></textarea>
 
-            <label for="content">Content (HTML - often generated, edit if needed):</label>
-            <textarea id="content" name="content" rows="10"></textarea>
+                        <div class="form-buttons">
+                            <button type="submit" id="save-button">Add Page</button>
+                            <button type="button" id="clear-button">Clear Form</button>
+                            <button type="button" id="site-builder-button" disabled>Go to Site Builder</button>
+                            </div>
+                    </form>
+                </div>
+            </div>
 
-            <label for="html">Generated HTML (if separate):</label>
-            <textarea id="html" name="html" rows="5" placeholder="HTML version of content/markdown"></textarea>
-
-            <div class="form-buttons">
-                <button type="submit" id="save-button">Add Page</button>
-                <button type="button" id="clear-button">Clear Form</button>
-                <button type="button" id="site-builder-button" disabled>Go to Site Builder</button>
-                 </div>
-        </form>
+    <div id="manage-tab" class="tab-content">
+        <!-- Existing list-area content here -->
+        <div id="list-area">
+            <h2>Existing Pages</h2>
+            <input type="text" id="search-box" placeholder="Search by Title or Slug...">
+            <table id="pages-table">
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Slug</th>
+                        <th>Tags</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    </tbody>
+            </table>
+        </div>
     </div>
+    
+</body>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const API_BASE_URL = '/admin'; // Your FastAPI prefix
+            const pageForm = document.getElementById('page-form');
+            const editSlugField = document.getElementById('edit-slug');
+            const titleField = document.getElementById('title');
+            const slugField = document.getElementById('slug');
+            const tagsField = document.getElementById('tags');
+            const markdownField = document.getElementById('markdown');
+            const contentField = document.getElementById('content');
+            const htmlField = document.getElementById('html');
+            const saveButton = document.getElementById('save-button');
+            const clearButton = document.getElementById('clear-button');
+            const siteBuilderButton = document.getElementById('site-builder-button');
+            const pagesTableBody = document.querySelector('#pages-table tbody');
+            const searchBox = document.getElementById('search-box');
+            const statusMessageDiv = document.getElementById('status-message');
 
-    <hr>
+            let allPagesData = []; // Cache fetched pages for filtering and editing
 
-    <div id="list-area">
-        <h2>Existing Pages</h2>
-        <input type="text" id="search-box" placeholder="Search by Title or Slug...">
-        <table id="pages-table">
-            <thead>
-                <tr>
-                    <th>Title</th>
-                    <th>Slug</th>
-                    <th>Tags</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                </tbody>
-        </table>
-    </div>
+            // --- Utility Functions ---
 
-    <script type="module" src="scripts/main.js"></script>body>
+            // Tab Functionality
+            document.querySelectorAll('.tab-button').forEach(button => {
+                button.addEventListener('click', () => {
+                    // Remove active classes
+                    document.querySelectorAll('.tab-button, .tab-content').forEach(el => {
+                        el.classList.remove('active');
+                    });
+                    
+                    // Activate clicked tab
+                    const tabId = button.dataset.tab;
+                    button.classList.add('active');
+                    document.getElementById(tabId).classList.add('active');
+                });
+            });
+
+
+            function showStatus(message, isError = false) {
+                statusMessageDiv.textContent = message;
+                statusMessageDiv.className = `status ${isError ? 'error' : 'success'}`;
+                // Auto-hide after 5 seconds
+                setTimeout(() => {
+                    statusMessageDiv.textContent = '';
+                    statusMessageDiv.className = 'status';
+                }, 5000);
+            }
+
+            function clearForm() {
+                pageForm.reset();
+                editSlugField.value = '';
+                saveButton.textContent = 'Add Page';
+                slugField.readOnly = false; // Make slug editable for new pages
+                // Optionally scroll to top or form
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+
+            function formatTagsForApi(tagsString) {
+                return tagsString.split(',')
+                                .map(tag => tag.trim())
+                                .filter(tag => tag.length > 0);
+            }
+            
+            // If backend returns a JSON string for tags, parse it for display
+            function parseTagsForDisplay(tagsData) {
+                if (!tagsData) return '';
+                // Check if it looks like a JSON array string '["a","b"]'
+                if (typeof tagsData === 'string' && tagsData.startsWith('[') && tagsData.endsWith(']')) {
+                    try {
+                        const tagsArray = JSON.parse(tagsData);
+                        return Array.isArray(tagsArray) ? tagsArray.join(', ') : tagsData; // Join back for display
+                    } catch (e) {
+                        return tagsData; // Return original string if parsing fails
+                    }
+                }
+                // If it's already an array (less likely from Form(...)) or just a string
+                return Array.isArray(tagsData) ? tagsData.join(', ') : String(tagsData);
+            }
+
+            // --- API Interaction ---
+
+            async function fetchPages() {
+                try {
+                    const response = await fetch(`${API_BASE_URL}/list`);
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    allPagesData = await response.json();
+                    renderTable(allPagesData);
+                } catch (error) {
+                    console.error('Error fetching pages:', error);
+                    showStatus(`Error fetching pages: ${error.message}`, true);
+                    allPagesData = []; // Clear cache on error
+                    renderTable([]); // Clear table
+                }
+            }
+
+            async function deletePage(slug) {
+                if (!confirm(`Are you sure you want to delete the page with slug: ${slug}?`)) {
+                    return;
+                }
+                try {
+                    const response = await fetch(`${API_BASE_URL}/delete/${slug}`, {
+                        method: 'DELETE',
+                    });
+                    const result = await response.json();
+                    if (!response.ok) {
+                        throw new Error(result.detail || `HTTP error! status: ${response.status}`);
+                    }
+                    showStatus(result.message || `Page '${slug}' deleted successfully.`);
+                    fetchPages(); // Refresh the list
+                    if (editSlugField.value === slug) { // If the deleted page was being edited
+                        clearForm();
+                    }
+                } catch (error) {
+                    console.error('Error deleting page:', error);
+                    showStatus(`Error deleting page: ${error.message}`, true);
+                }
+            }
+
+            async function savePage(event) {
+                event.preventDefault(); // Prevent default HTML form submission
+                const currentEditSlug = editSlugField.value;
+                const isUpdating = !!currentEditSlug;
+
+                // --- Prepare Data ---
+                let requestBody;
+                let requestUrl;
+                let requestMethod;
+                let headers = {};
+
+                const slugValue = slugField.value.trim();
+                const titleValue = titleField.value.trim();
+                const tagsValue = formatTagsForApi(tagsField.value.trim()); // Format tags
+                const markdownValue = markdownField.value;
+                const contentValue = contentField.value;
+                const htmlValue = htmlField.value;
+
+                if (isUpdating) {
+                    // --- UPDATE (PUT) ---
+                    requestUrl = `${API_BASE_URL}/update/${currentEditSlug}`;
+                    requestMethod = 'PUT';
+                    headers['Content-Type'] = 'application/json';
+                    requestBody = JSON.stringify({
+                        title: titleValue,
+                        slug: slugValue,
+                        tags: tagsValue,
+                        markdown: markdownValue,
+                        content: contentValue,
+                        html: htmlValue
+                    });
+                } else {
+                    // --- ADD (POST) ---
+                    requestUrl = `${API_BASE_URL}/add`;
+                    requestMethod = 'POST';
+                    const formData = new FormData();
+                    formData.append('title', titleValue);
+                    formData.append('slug', slugValue);
+                    formData.append('tags', tagsValue);
+                    formData.append('markdown', markdownValue);
+                    formData.append('content', contentValue);
+                    formData.append('html', htmlValue);
+                    requestBody = formData;
+                }
+
+                // --- Send Request ---
+                try {
+                    const response = await fetch(requestUrl, {
+                        method: requestMethod,
+                        headers: headers,
+                        body: requestBody
+                    });
+
+                    const result = await response.json();
+
+                    if (!response.ok) {
+                        throw new Error(result.detail || `HTTP error! status: ${response.status}`);
+                    }
+
+                    showStatus(result.message || `Page ${isUpdating ? 'updated' : 'created'} successfully.`);
+                    
+                    // Return the slug for functions that need it after saving (like site builder)
+                    return slugValue;
+                    
+                } catch (error) {
+                    console.error(`Error ${isUpdating ? 'updating' : 'adding'} page:`, error);
+                    showStatus(`Error: ${error.message}`, true);
+                    return null;
+                }
+            }
+
+            // --- UI Rendering and Event Handlers ---
+
+            function renderTable(pages) {
+                pagesTableBody.innerHTML = ''; // Clear existing rows
+                if (!pages || pages.length === 0) {
+                    pagesTableBody.innerHTML = '<tr><td colspan="4">No pages found.</td></tr>';
+                    return;
+                }
+
+                pages.forEach(page => {
+                    const row = pagesTableBody.insertRow();
+                    row.setAttribute('data-slug', page.slug); // Store slug for easy access
+
+                    row.insertCell().textContent = page.title;
+                    row.insertCell().textContent = page.slug;
+                    row.insertCell().textContent = parseTagsForDisplay(page.tags); // Display parsed tags
+
+                    // Actions cell
+                    const actionsCell = row.insertCell();
+                    const editButton = document.createElement('button');
+                    editButton.textContent = 'Edit';
+                    editButton.classList.add('action-button', 'edit-button');
+                    editButton.onclick = () => prepareEdit(page.slug);
+                    actionsCell.appendChild(editButton);
+
+                    const deleteButton = document.createElement('button');
+                    deleteButton.textContent = 'Delete';
+                    deleteButton.classList.add('action-button', 'delete-button');
+                    deleteButton.onclick = () => deletePage(page.slug);
+                    actionsCell.appendChild(deleteButton);
+                });
+            }
+
+            function prepareEdit(slug) {
+                const pageData = allPagesData.find(p => p.slug === slug);
+                if (!pageData) {
+                    showStatus(`Could not find page data for slug: ${slug}`, true);
+                    return;
+                }
+
+                editSlugField.value = pageData.slug;
+                titleField.value = pageData.title;
+                slugField.value = pageData.slug;
+                tagsField.value = parseTagsForDisplay(pageData.tags); // Use parsed tags for editing
+                markdownField.value = pageData.markdown || '';
+                contentField.value = pageData.content || '';
+                htmlField.value = pageData.html || ''; // Populate html field
+
+                saveButton.textContent = 'Save Changes';
+                slugField.readOnly = false; // Allow slug editing
+
+                // Scroll to the form for better UX
+                const editArea = document.getElementById('edit-area');
+                if (editArea) {
+                    editArea.scrollIntoView({ behavior: 'smooth' });
+                }
+            }
+
+            function filterTable() {
+                const searchTerm = searchBox.value.toLowerCase();
+                const filteredPages = allPagesData.filter(page =>
+                    page.title.toLowerCase().includes(searchTerm) ||
+                    page.slug.toLowerCase().includes(searchTerm)
+                );
+                renderTable(filteredPages);
+            }
+
+            // Simplified site builder navigation - directly uses current slug
+            function navigateToSiteBuilder() {
+                const slug = slugField.value.trim();
+                
+                if (!slug) {
+                    showStatus("Cannot navigate to Site Builder without a valid slug.", true);
+                    return;
+                }
+                
+                // Confirm with user that form will be saved
+                if (!confirm("This will save the current page before opening the Site Builder. Continue?")) {
+                    return;
+                }
+                
+                // Save the form first
+                savePage(new Event('submit', { cancelable: true }))
+                    .then(savedSlug => {
+                        if (savedSlug) {
+                            // Navigate after successful save
+                            window.location.href = `/site-builder?slug=${encodeURIComponent(savedSlug)}`;
+                        }
+                    });
+            }
+
+            // --- Initial Setup ---
+            pageForm.addEventListener('submit', savePage);
+            clearButton.addEventListener('click', clearForm);
+            searchBox.addEventListener('input', filterTable);
+            siteBuilderButton.addEventListener('click', navigateToSiteBuilder);
+            
+            // Add tooltip or hint about the auto-save behavior
+            siteBuilderButton.title = "Saves the page and opens it in Site Builder";
+            
+            // You could also add a visual indicator near the button
+            const buttonHint = document.createElement('span');
+            buttonHint.textContent = "(auto-saves)";
+            buttonHint.className = "button-hint";
+            buttonHint.style.fontSize = "0.8em";
+            buttonHint.style.marginLeft = "5px";
+            buttonHint.style.color = "#666";
+            siteBuilderButton.parentNode.insertBefore(buttonHint, siteBuilderButton.nextSibling);
+
+            fetchPages(); // Load initial data
+        });
+    </script>
 </html>
