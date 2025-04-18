@@ -67,4 +67,4 @@ Feel free to submit issues and pull requests to help improve Amiya CMS.
 
 [Iteranya](https://github.com/Iteranya)
 
-🐰 bnnuy
+🐇 bnnuy
