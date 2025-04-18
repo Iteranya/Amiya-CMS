@@ -61,7 +61,7 @@ Feel free to submit issues and pull requests to help improve Amiya CMS.
 
 ## License
 
-[MIT License](LICENSE)
+[AGPL-3 License](LICENSE)
 
 ## Project by
 
