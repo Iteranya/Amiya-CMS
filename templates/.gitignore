@@ -1,3 +1,4 @@
 *.html
 !.gitignore
 !index.html
+!index_example.html

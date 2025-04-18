@@ -5,7 +5,7 @@ from fastapi.responses import HTMLResponse, FileResponse
 from app.crud import get_page_by_slug, list_pages
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
-from app.routes import admin_route, aina_route, aiconfig_route
+from app.routes import admin_route, aina_route, aiconfig_route,public_route
 from fastapi.templating import Jinja2Templates
 
 app = FastAPI(
@@ -21,6 +21,7 @@ templates = Jinja2Templates(directory="templates")
 app.include_router(admin_route.router)
 app.include_router(aina_route.router)
 app.include_router(aiconfig_route.router)
+app.include_router(public_route.router)
 
 # Static assets (if you need to serve logos, favicons, etc.)
 app.mount("/static", StaticFiles(directory="static"), name="static")
@@ -35,10 +36,10 @@ app.add_middleware(
 )
 
 # Root: simple welcome or site list
-@app.get("/", response_class=HTMLResponse)
+@app.get("/wisata", response_class=HTMLResponse)
 async def home(request: Request):
     pages = list_pages()
-    return templates.TemplateResponse("index.html", {"request": request, "pages": pages})
+    return templates.TemplateResponse("wisata.html", {"request": request, "pages": pages})
 
 # Dynamic route to serve saved pages as raw HTML
 @app.get("/site/{slug}", response_class=HTMLResponse)
