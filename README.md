@@ -51,6 +51,9 @@ cd Amiya-CMS
 3. Use the integrated Aina Website Creator for AI-assisted content generation
 4. Your pages will be stored in the TinyDB database
 
+![image](https://github.com/user-attachments/assets/4c89c4ad-1561-416f-bf73-1ed2bdd9e908)
+
+
 ## Alternatives
 
 If you're not experienced with homebrew CMS solutions, consider established alternatives like WordPress.
