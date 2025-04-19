@@ -12,13 +12,27 @@ executor = ThreadPoolExecutor()
 
 # Change this part to go with database.
 def save_html(html_content, file_name):
-    page_object = crud.get_page_by_slug(file_name) #returns page
+    page_object = crud.get_page_by_slug(file_name)  # returns page
     page_object.html = html_content
-    # Convert the 'Page' object to a dictionary
-    page_data = page_object.__dict__  # Or a similar method to get its data as a dictionary
+    
+    # Convert the Page object to a dictionary with proper handling of nested objects
+    page_data = dataclass_to_dict(page_object)
+    
     crud.update_page(file_name, page_data)
     output_path = f"site/{file_name}"
     return output_path
+
+def dataclass_to_dict(obj):
+    """Convert a dataclass instance to a dict, handling nested dataclasses."""
+    if hasattr(obj, "__dict__"):
+        result = {}
+        for key, value in obj.__dict__.items():
+            result[key] = dataclass_to_dict(value)
+        return result
+    elif isinstance(obj, list):
+        return [dataclass_to_dict(item) for item in obj]
+    else:
+        return obj
 
 def process_website_request(title, content):
     """Process a website generation request - runs in a separate thread"""

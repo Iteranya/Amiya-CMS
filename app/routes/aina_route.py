@@ -6,7 +6,7 @@ from fastapi import APIRouter, Form, Body, HTTPException, Request
 from fastapi.responses import HTMLResponse, StreamingResponse
 from pathlib import Path
 from app.aina import generate_html_stream, active_generations, save_html, title_to_filename
-
+import traceback
 router = APIRouter()
 
 @router.post("/save-html")
@@ -20,7 +20,11 @@ async def deploy_site(
         output_path = save_html(content, title)
         return {"status": "success", "path": output_path}  # Return proper JSON!
     except Exception as e:
-        print(str(e))
+        # Print full traceback
+        traceback.print_exc()
+        # Or capture the traceback as a string
+        error_traceback = traceback.format_exc()
+        print(error_traceback)
         raise HTTPException(status_code=500, detail=str(e))
 
 
