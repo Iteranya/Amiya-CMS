@@ -4,55 +4,14 @@ document.addEventListener('DOMContentLoaded', function() {
     const preview = document.getElementById('preview');
     
     // Initialize welcome message
-    const welcomeHTML = `
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Welcome to Aina's Playground!</title>
-    <style>
-        body {
-            font-family: 'Comic Sans MS', cursive, sans-serif;
-            background: linear-gradient(135deg, #f5f9fa 0%, #e0f7fa 100%);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            text-align: center;
-        }
-        .welcome-box {
-            background: white;
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            max-width: 500px;
-        }
-        h1 {
-            color: #4CAF50;
-            margin-bottom: 20px;
-        }
-        p {
-            color: #666;
-            line-height: 1.6;
-        }
-        .kawaii {
-            font-size: 2rem;
-            margin: 20px 0;
-        }
-    </style>
-</head>
-<body>
-    <div class="welcome-box">
-        <h1>Konnichiwa! (◕‿◕✿)</h1>
-        <div class="kawaii">(ﾉ◕ヮ◕)ﾉ*:･ﾟ✧</div>
-        <p>Start coding in the editor and see your creation come to life here!</p>
-        <p>Or describe your dream website below and let me generate it for you~</p>
-    </div>
-</body>
-</html>
-    `;
+    const editingHTML = ""
+    const welcomeHTML = "<!DOCTYPE html>\n<html>\n<head>\n    <title>Welcome to Aina\'s Playground!</title>\n    <style>\n        body {\n            font-family: \'Comic Sans MS\', cursive, sans-serif;\n            background: linear-gradient(135deg, #f5f9fa 0%, #e0f7fa 100%);\n            display: flex;\n            justify-content: center;\n            align-items: center;\n            height: 100vh;\n            margin: 0;\n            text-align: center;\n        }\n        .welcome-box {\n            background: white;\n            padding: 30px;\n            border-radius: 15px;\n            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);\n            max-width: 500px;\n        }\n        h1 {\n            color: #4CAF50;\n            margin-bottom: 20px;\n        }\n        p {\n            color: #666;\n            line-height: 1.6;\n        }\n        .kawaii {\n            font-size: 2rem;\n            margin: 20px 0;\n        }\n    </style>\n</head>\n<body>\n    <div class=\"welcome-box\">\n        <h1>Konnichiwa! (◕‿◕✿)</h1>\n        <div class=\"kawaii\">(ﾉ◕ヮ◕)ﾉ*:･ﾟ✧</div>\n        <p>Start coding in the editor and see your creation come to life here!</p>\n        <p>Or describe your dream website below and let me generate it for you~</p>\n    </div>\n</body>\n</html>";
+    if(editingHTML == ""){
+        htmlCode.value = welcomeHTML;
+    }else{
+        htmlCode.value = editingHTML;
+    }
     
-    htmlCode.value = welcomeHTML;
     
     // Initialize all modules
     initPreview(htmlCode, preview);

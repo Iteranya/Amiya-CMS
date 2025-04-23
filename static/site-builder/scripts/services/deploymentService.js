@@ -11,12 +11,21 @@ function setupDeployment(htmlCode) {
     // Handle deployment when the deploy button is clicked
     deployBtn.addEventListener('click', async () => {
         const title = siteTitleInput.value;
-        const content = htmlCode.value;
-
+        let content = htmlCode.value;
+        const htmlRegex = /(<!DOCTYPE html>[\s\S]*?<\/html>)/i;
+        const match = content.match(htmlRegex);
+        content = match ? match[0] : ""; 
+        
         if (!title) {
             alert('Please enter a site title!');
             return;
         }
+
+        if (content =="") {
+            alert('Oh nyoo~ The Website is unfinished! Please try again Senpai~');
+            return;
+        }
+
 
         try {
             const response = await fetch('/save-html', {
