@@ -49,7 +49,8 @@ cd Amiya-CMS
 1. Access the admin panel at `/admin`
 2. Edit website metadata and slugs
 3. Use the integrated Aina Website Creator for AI-assisted content generation
-4. Your pages will be stored in the TinyDB database
+4. Or alternatively, use the markdown editor, your site will be auto generated from markdown
+5. All your data will be stored in the TinyDB database
 
 ![image](https://github.com/user-attachments/assets/4c89c4ad-1561-416f-bf73-1ed2bdd9e908)
 
