@@ -148,6 +148,31 @@
             margin-bottom: 20px;
         }
 
+        /* File Input Styling */
+        input[type="file"] {
+            display: block;
+            padding: 10px 12px;
+            font-size: 1em;
+            color: #495057;
+            background-color: #fff;
+            border: 1px solid #ced4da;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            cursor: pointer;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        input[type="file"]:hover {
+            border-color: #80bdff;
+        }
+
+        input[type="file"]:focus {
+            border-color: #80bdff;
+            outline: 0;
+            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+        }
+
+
         /* Buttons Styling */
         .button {
             padding: 12px 20px;
