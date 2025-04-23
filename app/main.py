@@ -48,11 +48,6 @@ async def render_site(slug: str):
         raise HTTPException(status_code=404, detail="Page not found")
     return HTMLResponse(content=page.html, status_code=200)
 
-# Admin Route
-@app.get("/admin", response_class=FileResponse)
-async def admin_ui():
-    return FileResponse("static/admin-panel/index.html")
-
 # Just in case someone want to add SPA functionality
 @app.get("/api/site/{slug}")
 async def api_site(slug: str):

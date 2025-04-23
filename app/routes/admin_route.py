@@ -1,11 +1,23 @@
+from pathlib import Path
 from typing import List, Optional
-from fastapi import APIRouter, HTTPException, Form
+from fastapi import APIRouter, HTTPException, Form, Request
+from fastapi.responses import HTMLResponse, StreamingResponse
 from app.models import Page
 from app.crud import create_page, delete_page, update_page, get_page_by_slug, list_pages
 from pydantic import ValidationError
+from app.bundler import StaticBundler
 
 router = APIRouter(prefix="/admin", tags=["Admin"])
 
+@router.get("/", response_class=HTMLResponse)
+
+async def get_html():
+    bundler = StaticBundler(
+    template_path="static/admin-panel/index.html",
+    scripts_dir="static/admin-panel/scripts",
+    styles_dir="static/admin-panel/styles"
+    )
+    return bundler.generate_html()
 
 
 # Add a new page
