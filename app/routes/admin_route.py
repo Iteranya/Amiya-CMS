@@ -10,7 +10,6 @@ from app.bundler import StaticBundler
 router = APIRouter(prefix="/admin", tags=["Admin"])
 
 @router.get("/", response_class=HTMLResponse)
-
 async def get_html():
     bundler = StaticBundler(
     template_path="static/admin-panel/index.html",
