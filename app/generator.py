@@ -30,10 +30,10 @@ def generate_markdown_page(title:str,md: str, css = "templates/styles.css", js =
 <div class="markdown-content">
     {html_content}
 </div>
-</body>
 <script>
 {custom_js}
 </script>
+</body>
 </html>"""
     
     return html
