@@ -6,6 +6,7 @@ from app.crud import get_page_by_slug, list_pages
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 from app.routes import admin_route, aina_route, aiconfig_route, media_route
+from app.generator import generate_markdown_page
 from fastapi.templating import Jinja2Templates
 
 app = FastAPI(
@@ -47,7 +48,11 @@ async def render_site(slug: str):
     page = get_page_by_slug(slug)
     if not page:
         raise HTTPException(status_code=404, detail="Page not found")
-    return HTMLResponse(content=page.html, status_code=200)
+    if page.html != None and page.html != "":
+        return HTMLResponse(content=page.html, status_code=200)
+    else:
+        generated = generate_markdown_page(page.title,page.markdown)
+        return HTMLResponse(content=generated, status_code=200)
 
 # Just in case someone want to add SPA functionality
 @app.get("/api/site/{slug}")
