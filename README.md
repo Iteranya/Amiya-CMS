@@ -1,77 +1,80 @@
-# Amiya CMS
+# Amiya CMS 🐇
 
-A lightweight content management system built with FastAPI, TinyDB, and vanilla web technologies. Amiya CMS includes direct integration with [Aina Website Creator](https://github.com/Iteranya/Aina-Website-Creator) for AI-assisted website generation and editing.
+*"You've been working hard, so I made this for you, Doctor"*
 
 ![Amiya](https://github.com/user-attachments/assets/164c4cf0-7bf4-4af2-a537-174bd1575b07)
 
+This is umm... A CMS that I made with Vanilla JS, FastAPI, and TinyDB. Not really... industry standard, but it's very, very easy to setup! It's perfect for slow traffic website like local cafe or someone's portfolio!
+
+And I know how much you don't like Wordpress for all the Paywalls and all that, so... I hope this will be umm, a sufficient replacement!
+
+I'm not saying that it's perfect, but I've added some Quality of Life features to make things easier for you.
 
 ## Features
 
-- Simple admin interface for content management
-- Page metadata and slug editing
-- AI-powered website generation through Aina integration
-- HTML and Markdown content storage in TinyDB
-- Built with minimal dependencies:
+- Admin panel
+- Edit page URLs
+- Optional AI help from [Aina Website Creator](https://github.com/Iteranya/Aina-Website-Creator) (for when the Client tells you to "make it pop!")
+- Stores everything in TinyDB
+- Made with very lightweight stuff:
   - FastAPI
-  - TinyDB
-  - Vanilla JavaScript
+  - JavaScript (vanilla flavor)
   - CSS
   - HTML with Jinja templates
-- Cloudflare integration for easy sharing
-- Static Site Generation with Markdown
-- Simple Image File Hosting and Handling
-
-
-## ⚠️ Warning
-
-**This project is still under development and lacks authentication/security features**. The admin panel is accessible through `/admin` without any login requirements. **DO NOT use in production environments!**
+  - OpenAI API for Aina Integration
+- Comes with Cloudflare integration
+- Generates static sites from Markdown (sometimes you just want something simple~)
+- Basic image hosting
+- Cookie-based security
+  
 
 ## Installation
 
-### Windows
-1. Clone the repository:
-```
+### For Windows Operators:
+```cmd
 git clone https://github.com/Iteranya/Amiya-CMS.git
 cd Amiya-CMS
-```
-2. Run the installation script:
-```
-start.cmd
+start.cmd 
 ```
 
-### Linux/MacOS
-1. Clone the repository:
-```
+### For Linux/MacOS Specialists:
+```bash
 git clone https://github.com/Iteranya/Amiya-CMS.git
 cd Amiya-CMS
+// Handle the rest depending on your system
 ```
-2. Create your own startup script based on the commands in `start.cmd`
 
-## Usage
+## Usage Instructions
 
-1. Access the admin panel at `/admin`
-2. Edit website metadata and slugs
-3. Use the integrated Aina Website Creator for AI-assisted content generation
-4. Or alternatively, use the markdown editor, your site will be auto generated from markdown
-5. All your data will be stored in the TinyDB database
+1. Go to `/admin`
+2. Edit website stuff
+3. Let Aina's AI help with the UI and CSS
+4. Or use Markdown like a normal person for something more old fashioned
+5. Everything gets saved automatically
 
-![image](https://github.com/user-attachments/assets/4c89c4ad-1561-416f-bf73-1ed2bdd9e908)
+![Screenshot of Amiya's questionable UI choices](https://github.com/user-attachments/assets/4c89c4ad-1561-416f-bf73-1ed2bdd9e908)
 
+*"I'm not saying that this is better than Wordpress, but I feel like... Wordpress is a bit too much and setting it up can be really stressful with all the paywalls..."*
 
-## Alternatives
+## So I Made This~
 
-If you're not experienced with homebrew CMS solutions, consider established alternatives like WordPress.
+For when you're paid less than 20 LMD to make:
+- Operator portfolio sites
+- Local café pages
+- An alternative to Powerpoint Presentation
+- And more~
 
-## Contributing
-
-Feel free to submit issues and pull requests to help improve Amiya CMS.
+*Not* for:
+- Blacksteel enterprise solutions
+- Rhodes Island main website (please)
+- Anything expecting more than 5 visitors at once
 
 ## License
 
-[AGPL-3 License](LICENSE)
+AGPL-3 (Kal'tsit insisted)
 
-## Project by
+## Created By
 
-[Iteranya](https://github.com/Iteranya)
+[Iteranya](https://github.com/Iteranya) with help from Amiya's questionable coding skills
 
-🐇 bnnuy
+*"I hope you like it, Doctor"* 🐇
