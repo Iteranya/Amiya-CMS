@@ -55,8 +55,8 @@ async def setup_admin_account(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Password must be at least 8 characters"
         )
-    
-    set_admin_password(password)
+
+    set_admin_password(password,username)
     
     return {
         "status": "success",

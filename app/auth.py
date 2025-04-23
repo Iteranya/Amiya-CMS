@@ -117,7 +117,9 @@ def get_admin_user() -> AdminUser:
         data = json.load(f)
         return AdminUser(**data["admin"])
 
-def set_admin_password(password: str):
+
+# Ah, here,
+def set_admin_password(password: str, username = "Admin"):
     hashed_password = pwd_context.hash(password)
     
     if secrets_file_exists():
@@ -126,7 +128,7 @@ def set_admin_password(password: str):
     else:
         secrets = {
             "admin": {
-                "username": "admin",
+                "username": {username},
                 "hashed_password": hashed_password,
                 "disabled": False
             }
@@ -134,3 +136,4 @@ def set_admin_password(password: str):
     
     secrets["admin"]["hashed_password"] = hashed_password
     save_secrets(secrets)
+
