@@ -10,7 +10,7 @@ A lightweight content management system built with FastAPI, TinyDB, and vanilla 
 - Simple admin interface for content management
 - Page metadata and slug editing
 - AI-powered website generation through Aina integration
-- HTML content storage in TinyDB
+- HTML and Markdown content storage in TinyDB
 - Built with minimal dependencies:
   - FastAPI
   - TinyDB
@@ -18,6 +18,9 @@ A lightweight content management system built with FastAPI, TinyDB, and vanilla 
   - CSS
   - HTML with Jinja templates
 - Cloudflare integration for easy sharing
+- Static Site Generation with Markdown
+- Simple Image File Hosting and Handling
+
 
 ## ⚠️ Warning
 
