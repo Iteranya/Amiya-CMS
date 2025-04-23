@@ -1,3 +1,4 @@
+import re
 from typing import List, Optional
 from tinydb import where
 from app.db import db, SiteQuery, flush_db
@@ -5,7 +6,23 @@ from app.models import Page, Image
 from pydantic import TypeAdapter
 
 # Save a Page to the DB
+def is_slug_friendly(slug: str) -> bool:
+    return re.fullmatch(r"[a-z0-9]+(?:-[a-z0-9]+)*", slug) is not None
+
 def create_page(page: Page) -> int:
+    if not is_slug_friendly(page.slug):
+        print("error caught")
+        raise ValueError(f"Invalid slug format: '{page.slug}'. Slugs must be lowercase alphanumeric with hyphens.")
+    
+    # Check for duplicate slug - assuming db is a TinyDB instance
+    # Replace this line:
+    # if db.contains({'slug': page.slug}):
+    
+    # With this (using TinyDB Query):
+    if db.contains(SiteQuery.slug == page.slug):
+        print("error caught")
+        raise ValueError(f"Slug '{page.slug}' already exists.")
+
     data = page.__dict__
     doc_id = db.insert(data)
     flush_db()  # Ensure data is written to disk

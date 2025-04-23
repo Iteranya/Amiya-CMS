@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import List, Optional
+from typing import Dict, List, Optional
 from fastapi import APIRouter, HTTPException, Form, Request
 from fastapi.responses import HTMLResponse, StreamingResponse
 from app.models import Page
@@ -21,13 +21,14 @@ async def get_html():
 
 
 # Add a new page
-@router.post("/add", response_model=dict)
+@router.post("/add", response_model=Dict)
 async def add_page(page: Page):
+    print("--------------ADD PAGE--------------")
     try:
-        # The incoming data is already a Page object thanks to Pydantic
-        # No need to construct a new Page object
         page_id = create_page(page)
         return {"message": "Page created successfully", "id": page_id}
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
     except ValidationError as e:
         raise HTTPException(status_code=400, detail=str(e))
     except Exception as e:

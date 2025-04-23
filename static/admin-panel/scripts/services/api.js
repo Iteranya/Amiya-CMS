@@ -95,17 +95,37 @@ async function savePage(event) {
 
         if (!response.ok) {
             let errorMsg = result.detail;
-            if (typeof errorMsg === 'object' && errorMsg.length > 0) {
-                errorMsg = errorMsg.map(err => `${err.loc[err.loc.length - 1]}: ${err.msg}`).join('; ');
-            } else if (typeof errorMsg !== 'string') {
-                errorMsg = `HTTP error! status: ${response.status}`;
+
+            if (Array.isArray(errorMsg) && errorMsg.length > 0) {
+                // Pydantic-style validation error
+                errorMsg = errorMsg.map(err => `${err.loc?.[err.loc.length - 1] || 'field'}: ${err.msg}`).join('; ');
+            } else if (typeof errorMsg === 'string') {
+                // Use the plain error message
+                // (like from slug validation or duplicates)
+                // Keep as-is
+            } else {
+                // Fallback
+                errorMsg = `Unexpected error. Status: ${response.status}`;
             }
-            throw new Error(errorMsg);
+            
+            // Show the error message to the user
+            showStatus(errorMsg, true);
+            
+            // Reset button state
+            domElements.saveButton.innerHTML = isUpdating ? 'Save Changes' : 'Add Page';
+            return null;
         }
 
+        // Success case
         showStatus(result.message || `Page ${isUpdating ? 'updated' : 'added'} successfully.`);
         fetchPages();
-        prepareEditUI(slugValue);
+        
+        if (isUpdating) {
+            prepareEditUI(slugValue);
+        } else {
+            clearForm();
+        }
+        
         return slugValue;
     } catch (error) {
         console.error(`Error ${isUpdating ? 'updating' : 'adding'} page:`, error);
@@ -113,10 +133,6 @@ async function savePage(event) {
         return null;
     } finally {
         domElements.saveButton.disabled = false;
-        if (domElements.editSlug.value) {
-            prepareEditUI(domElements.editSlug.value);
-        } else {
-            clearForm();
-        }
+        domElements.saveButton.innerHTML = isUpdating ? 'Save Changes' : 'Add Page';
     }
 }
