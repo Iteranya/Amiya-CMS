@@ -5,9 +5,13 @@ from fastapi.responses import HTMLResponse, FileResponse
 from app.crud import get_page_by_slug, list_pages
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
-from app.routes import admin_route, aina_route, aiconfig_route, media_route
+from app.routes import admin_route, aina_route, aiconfig_route, media_route, login_route,setup_route
 from app.generator import generate_markdown_page
 from fastapi.templating import Jinja2Templates
+from app.auth import Depends,get_current_user
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import RedirectResponse
+from app.auth import secrets_file_exists
 
 app = FastAPI(
     title="AmiyaCMS",
@@ -15,14 +19,39 @@ app = FastAPI(
     version="0.1.0",
 )
 
+@app.middleware("http")
+async def check_setup_middleware(request: Request, call_next):
+    # Skip setup check for these paths
+    if request.url.path in ['/setup', '/check-setup', '/static', '/login']:
+        return await call_next(request)
+    
+    # Redirect to setup if no admin account exists
+    if not secrets_file_exists() and request.url.path != '/setup':
+        return RedirectResponse(url='/setup')
+    
+    return await call_next(request)
+
 templates = Jinja2Templates(directory="templates")
 
-# Include Routers
-
-app.include_router(admin_route.router)
-app.include_router(aina_route.router)
-app.include_router(aiconfig_route.router)
+# Public Routers
+app.include_router(setup_route.router)
 app.include_router(media_route.router)
+app.include_router(login_route.router)
+
+# Protected Routers
+app.include_router(
+    admin_route.router,
+    dependencies=[Depends(get_current_user)]
+)
+app.include_router(
+    aiconfig_route.router,
+    dependencies=[Depends(get_current_user)]
+)
+app.include_router(
+    aina_route.router,
+    dependencies=[Depends(get_current_user)]
+)
+
 
 # Static assets (if you need to serve logos, favicons, etc.)
 app.mount("/static", StaticFiles(directory="static"), name="static")

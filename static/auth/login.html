@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login</title>
+    <link rel="stylesheet" href="/static/auth/styles/main.css">
+</head>
+<body>
+    <div class="login-container">
+        <h1>AmiyaCMS Login</h1>
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" id="remember_me" name="remember_me">
+                    Remember me
+                </label>
+            </div>
+            <button type="submit">Login</button>
+        </form>
+        <div id="error-message" class="error"></div>
+    </div>
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+        const rememberMe = document.getElementById('remember_me').checked;
+        
+        try {
+            const response = await fetch('/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: new URLSearchParams({
+                    username,
+                    password,
+                    remember_me: rememberMe
+                })
+            });
+            
+            if (response.ok) {
+                window.location.href = '/admin';  // Redirect to admin panel after login
+            } else {
+                const error = await response.json();
+                document.getElementById('error-message').textContent = error.detail || 'Login failed';
+            }
+        } catch (err) {
+            document.getElementById('error-message').textContent = 'Network error';
+        }
+    });
+    </script>
+</body>
+</html>
