@@ -304,12 +304,14 @@
                 <div class="card shadow-sm h-100">
                     <div class="card-img-wrapper">
                         {% if page.images and page.images[0].image %}
-                        <img src="{{ page.images[0].image }}" class="card-img-top" alt="{{ page.title }}">
+                            <img src="{{ page.images[0].image }}" class="card-img-top" alt="{{ page.title }}">
+                        {% elif page.thumb %}
+                            <img src="{{ page.thumb }}" class="card-img-top" alt="{{ page.title }}">
                         {% else %}
-                        <div class="no-image-placeholder">
-                             <i class="fas fa-image"></i> <!-- Icon for no image -->
-                            <span>No Image Available</span>
-                        </div>
+                            <div class="no-image-placeholder">
+                                <i class="fas fa-image"></i> <!-- Icon for no image -->
+                                <span>No Image Available</span>
+                            </div>
                         {% endif %}
                     </div>
                     <div class="card-body">

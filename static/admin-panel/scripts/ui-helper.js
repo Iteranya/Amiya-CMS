@@ -109,6 +109,7 @@ function prepareEdit(slug) {
     domElements.markdown.value = pageData.markdown || '';
     domElements.content.value = pageData.content || '';
     domElements.html.value = pageData.html || '';
+    domElements.thumb.value = pageData.thumb || '';
 
     prepareEditUI(pageData.slug);
     switchTab('edit-tab');

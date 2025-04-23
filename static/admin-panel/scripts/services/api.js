@@ -49,6 +49,7 @@ async function savePage(event) {
     const tagsValue = formatTagsForApi(domElements.tags.value.trim() || "");
     const markdownValue = domElements.markdown.value.trim() || "";
     const contentValue = domElements.content.value.trim() || "";
+    const thumbValue = domElements.thumb.value.trim() || "";
     const htmlValue = domElements.html.value.trim() || "";
 
     if (!titleValue || !slugValue) {
@@ -70,6 +71,7 @@ async function savePage(event) {
         tags: tagsValue,
         markdown: markdownValue,
         content: contentValue,
+        thumb: thumbValue,
         html: htmlValue
     };
 

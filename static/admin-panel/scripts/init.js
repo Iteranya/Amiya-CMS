@@ -9,6 +9,7 @@ function initDOMElements() {
         markdown: document.getElementById(ELEMENT_IDS.MARKDOWN),
         content: document.getElementById(ELEMENT_IDS.CONTENT),
         html: document.getElementById(ELEMENT_IDS.HTML),
+        thumb: document.getElementById(ELEMENT_IDS.THUMB),
         saveButton: document.getElementById(ELEMENT_IDS.SAVE_BUTTON),
         clearButton: document.getElementById(ELEMENT_IDS.CLEAR_BUTTON),
         siteBuilderLink: document.getElementById(ELEMENT_IDS.SITE_BUILDER_LINK),

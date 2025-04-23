@@ -22,3 +22,4 @@ class Page:
     content_length: Optional[int] = None
     tags: Optional[List[str]] = None
     images: Optional[List[Image]] = None
+    thumb: Optional[str] = None

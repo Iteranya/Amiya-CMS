@@ -8,6 +8,7 @@ const ELEMENT_IDS = {
     TITLE: 'title',
     SLUG: 'slug',
     TAGS: 'tags',
+    THUMB: 'thumb',
     MARKDOWN: 'markdown',
     CONTENT: 'content',
     HTML: 'html',
