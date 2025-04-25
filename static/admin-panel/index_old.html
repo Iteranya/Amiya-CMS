@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Page Management</title>
+    
+    <!-- Import Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style></style>
+</head>
+<body>
+    
+    <div class="container">
+        <h1><i class="fas fa-cogs"></i>Page Management</h1>
+        <div id="status-message" class="status"></div>
+
+        <!-- Tab Structure -->
+        <div class="tab-container">
+            <div class="tabs">
+                <!-- Changed order, Manage Pages first -->
+                <button class="tab-button active" data-tab="manage-tab"><i class="fas fa-list"></i>Manage Pages</button>
+                <button class="tab-button" data-tab="edit-tab"><i class="fas fa-edit"></i>Edit/Add Page</button>
+            </div>
+
+            <!-- Manage Tab -->
+            <div id="manage-tab" class="tab-content active">
+                <div class="manage-header">
+                    <h2><i class="fas fa-folder-open"></i> Existing Pages</h2>
+                    <div class="search-container">
+                         <input type="text" id="search-box" placeholder="Search by Title or Slug...">
+                         <button id="new-page-button" class="button button-success"><i class="fas fa-plus"></i> New Page</button>
+                    </div>
+                </div>
+                <table id="pages-table">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Slug</th>
+                            <th>Tags</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Page rows will be inserted here -->
+                    </tbody>
+                </table>
+                <div id="no-pages-message" style="text-align: center; padding: 20px; color: #6c757d; display: none;">
+                    No pages found. Click "New Page" to get started!
+                </div>
+            </div>
+
+            <!-- Edit/Add Tab -->
+            <div id="edit-tab" class="tab-content">
+                <div id="edit-area">
+                    <h2 id="edit-form-title"><i class="fas fa-file-alt"></i> Add New Page</h2>
+                    <form id="page-form">
+                        <input type="hidden" id="edit-slug" name="edit_slug">
+
+                        <label for="title">Title:</label>
+                        <input type="text" id="title" name="title" required>
+
+                        <label for="slug">Slug:</label>
+                        <input type="text" id="slug" name="slug" required pattern="[a-z0-9\-]+" title="Use only lowercase letters, numbers, and hyphens">
+                        <p class="input-hint">Unique identifier for the page URL (e.g., 'about-us'). Use lowercase letters, numbers, and hyphens only.</p>
+                        
+                        <label for="tags">Tags:</label>
+                        <input type="text" id="tags" name="tags" placeholder="e.g., blog, tech, news">
+                         <p class="input-hint">Comma-separated list of tags for categorization.</p>
+
+                        <label for="thumb">Thumbnail Direct Link:</label>
+                        <input type="text" id="thumb" name="thumb" placeholder="Enter a link towards an image..."></input>
+                        <p class="input-hint">A direct link to an image for the thumbnail.</p>
+
+                        <label for="media-file">Thumbnail Upload Media:</label>
+                        <input type="file" id="media-file" name="media">
+                        <p class="input-hint">Select an image or file to upload.</p>
+
+                        <label for="markdown">Markdown:</label>
+                        <textarea id="markdown" name="markdown" rows="10" placeholder="Enter content using Markdown syntax..."></textarea>
+
+                        <label for="content">Content (For Notes):</label>
+                        <textarea id="content" name="content" rows="10" placeholder="Enter raw HTML or alternative content..."></textarea>
+
+                        <label for="html">Generated HTML (Read-only):</label>
+                        <textarea id="html" name="html" rows="3" placeholder="This will be auto-generated or manually entered..." readonly></textarea>
+                        
+                        <div class="form-buttons">
+                            <button type="submit" id="save-button" class="button button-success"><i class="fas fa-save"></i> Add Page</button>
+                            <button type="button" id="clear-button" class="button button-warning"><i class="fas fa-eraser"></i> Clear Form</button>
+                            <a id="site-builder-link" class="button button-primary" href="#" target="_blank" disabled>
+                                <i class="fas fa-palette"></i> Go to Site Builder
+                                <span class="button-hint">(requires Title & Slug)</span>
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div> <!-- End Tab Container -->
+    </div> <!-- End Container -->
+
+    <script></script>
+</body>
+</html>

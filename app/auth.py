@@ -128,7 +128,7 @@ def set_admin_password(password: str, username = "Admin"):
     else:
         secrets = {
             "admin": {
-                "username": {username},
+                "username": username,
                 "hashed_password": hashed_password,
                 "disabled": False
             }

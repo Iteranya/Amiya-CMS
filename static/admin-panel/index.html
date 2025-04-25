@@ -3,93 +3,568 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Page Management</title>
-    
+    <title>Admin Page Management (Alpine.js)</title>
+
     <!-- Import Font Awesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <style></style>
+
+    <!-- Import Alpine.js via CDN -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+    <style>
+        /* General Styling - Mostly kept the same for visual consistency */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            background-color: #f8f9fa;
+            color: #343a40;
+            transition: background-color 0.3s ease; /* Smooth transition for potential theme changes */
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1); /* Slightly enhanced shadow */
+            overflow: hidden; /* Contain shadows and borders */
+        }
+
+        h1, h2 {
+            color: #0056b3;
+            border-bottom: 2px solid #dee2e6;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            display: flex;
+            align-items: center;
+        }
+
+        h1 i {
+            margin-right: 15px;
+            color: #007bff;
+            transition: transform 0.3s ease;
+        }
+        h1:hover i {
+            transform: rotate(-10deg) scale(1.1);
+        }
+
+        h2 {
+            font-size: 1.8em;
+            color: #495057;
+        }
+
+        /* Tabs Styling - Enhanced with transitions */
+        .tab-container {
+            margin-bottom: 30px;
+        }
+
+        .tabs {
+            display: flex;
+            border-bottom: 2px solid #dee2e6;
+            background-color: #f1f3f5; /* Light background for the tab bar */
+            border-radius: 6px 6px 0 0;
+            padding: 5px 5px 0 5px; /* Add some padding around tabs */
+        }
+
+        .tab-button {
+            padding: 12px 25px;
+            background: transparent; /* Make inactive tabs transparent */
+            border: none;
+            border-bottom: 3px solid transparent; /* Space for active indicator */
+            cursor: pointer;
+            font-size: 1.1em;
+            color: #495057;
+            transition: background-color 0.3s ease, color 0.3s ease, border-bottom-color 0.3s ease;
+            margin-right: 5px;
+            border-radius: 6px 6px 0 0;
+            position: relative;
+            bottom: -2px; /* Align with the bottom border */
+            font-weight: 500;
+        }
+
+        .tab-button:hover {
+            background-color: #e9ecef;
+            color: #0056b3;
+        }
+
+        .tab-button.active {
+            background: #ffffff; /* Match content background */
+            color: #0056b3;
+            font-weight: 700; /* Bolder active tab */
+            border: 2px solid #dee2e6;
+            border-bottom: 3px solid #ffffff; /* White border to blend with content */
+            box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.05); /* Subtle top shadow */
+        }
+
+        .tab-button i {
+            margin-right: 8px;
+        }
+
+        /* Tab Content - Using Alpine's x-show for transitions */
+        .tab-content {
+            background: #ffffff;
+            padding: 30px;
+            border: 2px solid #dee2e6;
+            border-top: none;
+            border-radius: 0 0 8px 8px; /* Match container radius */
+            /* display: none; /* Alpine handles visibility */
+        }
+
+        /* Form Styling - Added subtle focus animations */
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #495057;
+            font-size: 1.05em;
+        }
+
+        input[type="text"],
+        textarea,
+        input[type="file"] {
+            width: calc(100% - 24px); /* Account for padding */
+            padding: 12px;
+            margin-bottom: 20px;
+            border: 1px solid #ced4da;
+            border-radius: 6px;
+            font-size: 1em;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+        }
+
+        input[type="text"]:focus,
+        textarea:focus,
+        input[type="file"]:focus {
+            border-color: #80bdff;
+            outline: 0;
+            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+        }
+
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        /* Make slug input visually distinct when readonly */
+        input[readonly] {
+            background-color: #e9ecef !important; /* Force background color */
+            cursor: not-allowed;
+            opacity: 0.8;
+        }
+
+        .input-hint {
+            font-size: 0.9em;
+            color: #6c757d;
+            margin-top: -15px;
+            margin-bottom: 20px;
+            font-style: italic;
+        }
+
+        /* File Input Styling */
+         input[type="file"] {
+            display: block;
+            padding: 10px 12px;
+            font-size: 1em;
+            color: #495057;
+            background-color: #fff;
+            border: 1px solid #ced4da;
+            border-radius: 6px;
+            margin-bottom: 5px; /* Reduced margin */
+            cursor: pointer;
+        }
+
+        .file-info {
+            font-size: 0.9em;
+            color: #6c757d;
+            margin-bottom: 20px;
+        }
+
+        /* Buttons Styling - Added consistent hover/active effects */
+        .button {
+            padding: 12px 20px;
+            margin-right: 10px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            text-decoration: none; /* For anchor tags styled as buttons */
+            color: white; /* Default text color for buttons */
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            font-weight: 500;
+        }
+
+        .button i {
+            margin-right: 8px;
+        }
+
+        .button:not(:disabled):hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+
+        .button:not(:disabled):active {
+            transform: translateY(0);
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        }
+
+        .button-primary { background-color: #007bff; color: white; }
+        .button-primary:hover:not(:disabled) { background-color: #0056b3; }
+
+        .button-success { background-color: #28a745; color: white; }
+        .button-success:hover:not(:disabled) { background-color: #218838; }
+
+        .button-warning { background-color: #ffc107; color: #333; }
+        .button-warning:hover:not(:disabled) { background-color: #e0a800; }
+
+        .button-info { background-color: #17a2b8; color: white; }
+        .button-info:hover:not(:disabled) { background-color: #138496; }
+
+        .button-danger { background-color: #dc3545; color: white; }
+        .button-danger:hover:not(:disabled) { background-color: #c82333; }
+
+        .button-secondary { background-color: #6c757d; color: white; }
+        .button-secondary:hover:not(:disabled) { background-color: #5a6268; }
+
+        .button:disabled {
+            background-color: #cccccc;
+            color: #666666;
+            cursor: not-allowed;
+            opacity: 0.6;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .form-buttons {
+            margin-top: 25px;
+            border-top: 1px solid #dee2e6;
+            padding-top: 20px;
+            display: flex;
+            flex-wrap: wrap; /* Allow buttons to wrap on smaller screens */
+            gap: 10px; /* Space between buttons */
+        }
+
+        .manage-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap; /* Allow wrapping */
+            gap: 15px; /* Space between elements */
+            margin-bottom: 20px;
+        }
+
+        .search-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-grow: 1; /* Allow search to take available space */
+            min-width: 250px; /* Prevent excessive shrinking */
+        }
+
+        #search-box {
+            flex-grow: 1; /* Search input takes remaining space */
+            padding: 10px 15px;
+            border: 1px solid #ced4da;
+            border-radius: 6px;
+            font-size: 1em;
+        }
+
+        #search-box:focus {
+            border-color: #80bdff;
+            outline: 0;
+            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+        }
+
+        /* Table Styling - Enhanced hover effect */
+        #pages-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.08); /* Slightly stronger shadow */
+            border-radius: 8px;
+            overflow: hidden; /* Ensures border-radius is applied */
+        }
+
+        #pages-table th, #pages-table td {
+            border: 1px solid #e9ecef; /* Lighter border */
+            padding: 14px 18px; /* Slightly more padding */
+            text-align: left;
+            vertical-align: middle;
+            transition: background-color 0.2s ease;
+        }
+
+        #pages-table th {
+            background-color: #f8f9fa; /* Lighter header */
+            font-weight: 600;
+            color: #495057;
+            font-size: 1.1em;
+            position: sticky; /* Make header sticky if table scrolls */
+            top: 0;
+            z-index: 10;
+        }
+
+        #pages-table tbody tr:nth-child(even) {
+            background-color: #fdfdfe; /* Very subtle striping */
+        }
+
+        #pages-table tbody tr:hover {
+            background-color: #eef8ff; /* Lighter blue hover */
+            cursor: pointer; /* Indicate rows are interactive */
+        }
+
+        .action-button {
+            padding: 6px 12px;
+            margin-right: 5px;
+            font-size: 0.9em;
+        }
+
+        .action-buttons-cell {
+            display: flex;
+            gap: 8px; /* Increased gap */
+            min-width: 140px; /* Prevent wrapping on smaller screens */
+            white-space: nowrap; /* Prevent buttons from wrapping */
+        }
+
+        /* Status Message Styling - With smooth transitions */
+        .status {
+            padding: 15px 20px;
+            margin-bottom: 20px;
+            border-radius: 6px;
+            font-weight: 500;
+            display: flex; /* Use flex for alignment */
+            align-items: center;
+            border: 1px solid transparent;
+            font-size: 1.05em;
+            transition: opacity 0.3s ease, transform 0.3s ease, max-height 0.5s ease;
+            opacity: 0;
+            max-height: 0;
+            overflow: hidden;
+        }
+        .status.show {
+             opacity: 1;
+             max-height: 100px; /* Adjust as needed */
+        }
+        .status.success {
+            background-color: #d1e7dd;
+            color: #0f5132;
+            border-color: #badbcc;
+        }
+        .status.error {
+            background-color: #f8d7da;
+            color: #842029;
+            border-color: #f5c2c7;
+        }
+
+        .status i {
+            margin-right: 10px;
+            font-size: 1.3em; /* Slightly larger icon */
+            flex-shrink: 0; /* Prevent icon from shrinking */
+        }
+
+        /* Site Builder Button Hint */
+        .button-hint {
+            font-size: 0.85em;
+            color: #ffffff; /* Make hint visible on colored buttons */
+            margin-left: 8px;
+            font-style: italic;
+            opacity: 0.8;
+        }
+        .button-warning .button-hint {
+            color: #333; /* Adjust for yellow button */
+        }
+
+        /* Loader Styling */
+        .loader {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px;
+            font-size: 1.2em;
+            color: #6c757d;
+        }
+        .loader i {
+            margin-right: 10px;
+            font-size: 1.5em;
+            color: #007bff;
+        }
+
+        /* AlpineJS Specific Helper */
+        [x-cloak] { display: none !important; }
+
+
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            h1 { font-size: 2em; }
+            h2 { font-size: 1.5em; }
+            .tabs { flex-wrap: wrap; }
+            .tab-button { padding: 10px 15px; font-size: 1em; flex-grow: 1; text-align: center; margin-bottom: 5px; }
+            .tab-button.active { bottom: 0; } /* Reset bottom offset */
+            .manage-header { flex-direction: column; align-items: stretch; }
+            .search-container { width: 100%; }
+            .form-buttons { justify-content: center; }
+            /* Table responsiveness */
+            #pages-table thead { display: none; } /* Hide table header on small screens */
+            #pages-table tbody, #pages-table tr, #pages-table td { display: block; width: 100%; }
+            #pages-table tr { margin-bottom: 15px; border: 1px solid #dee2e6; border-radius: 6px; background-color: #fff; }
+            #pages-table td { text-align: right; padding-left: 50%; position: relative; border: none; border-bottom: 1px solid #e9ecef; }
+            #pages-table td:last-child { border-bottom: none; }
+            #pages-table td::before {
+                content: attr(data-label);
+                position: absolute;
+                left: 15px;
+                width: calc(50% - 30px);
+                padding-right: 10px;
+                font-weight: bold;
+                text-align: left;
+                white-space: nowrap;
+                color: #495057;
+            }
+             .action-buttons-cell { justify-content: flex-end; padding-left: 0; min-width: 0;} /* Adjust action buttons for mobile */
+             .action-buttons-cell::before { content: 'Actions'; } /* Add label for action cell */
+        }
+
+        @media (max-width: 576px) {
+            .container { margin: 15px; padding: 15px; }
+            .button { width: 100%; justify-content: center; margin-right: 0; } /* Full width buttons on mobile */
+            #pages-table td { padding-left: 40%; font-size: 0.95em; }
+             #pages-table td::before { width: calc(40% - 25px); font-size: 0.9em;}
+        }
+    </style>
 </head>
 <body>
-    
-    <div class="container">
-        <h1><i class="fas fa-cogs"></i>Page Management</h1>
-        <div id="status-message" class="status"></div>
+
+    <div class="container" x-data="pageManager()" x-init="init()">
+        <h1><i class="fas fa-cogs"></i>Page Management (Alpine.js)</h1>
+
+        <!-- Status Message Area -->
+        <div id="status-message" class="status" :class="{ 'show': status.message, 'success': status.type === 'success', 'error': status.type === 'error' }" x-show="status.message" x-transition>
+            <i :class="status.type === 'success' ? 'fas fa-check-circle' : 'fas fa-exclamation-circle'"></i>
+            <span x-text="status.message"></span>
+        </div>
 
         <!-- Tab Structure -->
         <div class="tab-container">
             <div class="tabs">
-                <!-- Changed order, Manage Pages first -->
-                <button class="tab-button active" data-tab="manage-tab"><i class="fas fa-list"></i>Manage Pages</button>
-                <button class="tab-button" data-tab="edit-tab"><i class="fas fa-edit"></i>Edit/Add Page</button>
+                <button class="tab-button" :class="{ 'active': activeTab === 'manage' }" @click="switchTab('manage')">
+                    <i class="fas fa-list"></i>Manage Pages
+                </button>
+                <button class="tab-button" :class="{ 'active': activeTab === 'edit' }" @click="switchTab('edit')">
+                    <i class="fas fa-edit"></i><span x-text="form.isEditing ? 'Edit Page' : 'Add Page'"></span>
+                </button>
             </div>
 
             <!-- Manage Tab -->
-            <div id="manage-tab" class="tab-content active">
+            <div id="manage-tab" class="tab-content" x-show="activeTab === 'manage'" x-transition>
                 <div class="manage-header">
                     <h2><i class="fas fa-folder-open"></i> Existing Pages</h2>
                     <div class="search-container">
-                         <input type="text" id="search-box" placeholder="Search by Title or Slug...">
-                         <button id="new-page-button" class="button button-success"><i class="fas fa-plus"></i> New Page</button>
+                         <input type="text" id="search-box" placeholder="Search by Title or Slug..." x-model="searchTerm" @input="filterPages()">
+                         <button id="new-page-button" class="button button-success" @click="prepareNewPage()">
+                             <i class="fas fa-plus"></i> New Page
+                         </button>
                     </div>
                 </div>
-                <table id="pages-table">
-                    <thead>
-                        <tr>
-                            <th>Title</th>
-                            <th>Slug</th>
-                            <th>Tags</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- Page rows will be inserted here -->
-                    </tbody>
-                </table>
-                <div id="no-pages-message" style="text-align: center; padding: 20px; color: #6c757d; display: none;">
-                    No pages found. Click "New Page" to get started!
+
+                <!-- Loading Indicator -->
+                 <div class="loader" x-show="isLoading" x-transition>
+                    <i class="fas fa-spinner fa-spin"></i> Loading pages...
+                 </div>
+
+                <div x-show="!isLoading">
+                    <table id="pages-table" x-show="filteredPages.length > 0">
+                        <thead>
+                            <tr>
+                                <th>Title</th>
+                                <th>Slug</th>
+                                <th>Tags</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <template x-for="page in filteredPages" :key="page.slug">
+                                <tr @click="prepareEdit(page.slug)" style="cursor: pointer;">
+                                    <td data-label="Title" x-text="page.title"></td>
+                                    <td data-label="Slug" x-text="page.slug"></td>
+                                    <td data-label="Tags" x-text="parseTagsForDisplay(page.tags)"></td>
+                                    <td data-label="Actions" class="action-buttons-cell" @click.stop> <!-- Prevent row click trigger -->
+                                        <button class="button button-info action-button" @click="prepareEdit(page.slug)">
+                                            <i class="fas fa-pencil-alt"></i> Edit
+                                        </button>
+                                        <button class="button button-danger action-button" @click="deletePage(page.slug)">
+                                            <i class="fas fa-trash-alt"></i> Delete
+                                        </button>
+                                    </td>
+                                </tr>
+                            </template>
+                        </tbody>
+                    </table>
+
+                    <div id="no-pages-message" x-show="filteredPages.length === 0 && !isLoading" style="text-align: center; padding: 30px; color: #6c757d;">
+                         <i class="fas fa-box-open" style="font-size: 1.5em; margin-bottom: 10px;"></i>
+                         <p x-text="searchTerm ? 'No pages match your search.' : 'No pages found. Click \'New Page\' to get started!'"></p>
+                    </div>
                 </div>
             </div>
 
             <!-- Edit/Add Tab -->
-            <div id="edit-tab" class="tab-content">
+            <div id="edit-tab" class="tab-content" x-show="activeTab === 'edit'" x-transition>
                 <div id="edit-area">
-                    <h2 id="edit-form-title"><i class="fas fa-file-alt"></i> Add New Page</h2>
-                    <form id="page-form">
-                        <input type="hidden" id="edit-slug" name="edit_slug">
+                    <h2 id="edit-form-title">
+                        <i :class="form.isEditing ? 'fas fa-file-alt' : 'fas fa-plus-square'"></i>
+                        <span x-text="form.isEditing ? 'Edit Page: ' + form.originalSlug : 'Add New Page'"></span>
+                    </h2>
+                    <form id="page-form" @submit.prevent="savePage">
+                        <input type="hidden" x-model="form.originalSlug">
 
                         <label for="title">Title:</label>
-                        <input type="text" id="title" name="title" required>
+                        <input type="text" id="title" name="title" x-model="form.title" required>
 
                         <label for="slug">Slug:</label>
-                        <input type="text" id="slug" name="slug" required pattern="[a-z0-9\-]+" title="Use only lowercase letters, numbers, and hyphens">
-                        <p class="input-hint">Unique identifier for the page URL (e.g., 'about-us'). Use lowercase letters, numbers, and hyphens only.</p>
-                        
+                        <input type="text" id="slug" name="slug" x-model="form.slug" required pattern="[a-z0-9\-]+" title="Use only lowercase letters, numbers, and hyphens" :readonly="form.isEditing" @input="form.slug = $event.target.value.toLowerCase().replace(/[^a-z0-9\-]+/g, '')">
+                        <p class="input-hint">Unique identifier for the page URL (e.g., 'about-us'). Use lowercase letters, numbers, and hyphens only. <span x-show="form.isEditing">(Cannot be changed after creation)</span></p>
+
                         <label for="tags">Tags:</label>
-                        <input type="text" id="tags" name="tags" placeholder="e.g., blog, tech, news">
+                        <input type="text" id="tags" name="tags" x-model="form.tags" placeholder="e.g., blog, tech, news">
                          <p class="input-hint">Comma-separated list of tags for categorization.</p>
 
                         <label for="thumb">Thumbnail Direct Link:</label>
-                        <input type="text" id="thumb" name="thumb" placeholder="Enter a link towards an image..."></input>
-                        <p class="input-hint">A direct link to an image for the thumbnail.</p>
+                        <input type="text" id="thumb" name="thumb" x-model="form.thumb" placeholder="Enter a link towards an image...">
+                        <p class="input-hint">A direct link to an image for the thumbnail (overrides uploaded file).</p>
 
                         <label for="media-file">Thumbnail Upload Media:</label>
-                        <input type="file" id="media-file" name="media">
-                        <p class="input-hint">Select an image or file to upload.</p>
+                        <input type="file" id="media-file" name="media" @change="handleFileSelect($event)">
+                         <div class="file-info">
+                            <span x-text="form.mediaFile ? `Selected: ${form.mediaFile.name}` : 'Select an image or file to upload.'"></span>
+                            <button type="button" x-show="form.mediaFile" @click="clearFileSelection()" class="button button-secondary action-button" style="margin-left: 10px; padding: 3px 8px; font-size: 0.8em;">Clear</button>
+                         </div>
+
 
                         <label for="markdown">Markdown:</label>
-                        <textarea id="markdown" name="markdown" rows="10" placeholder="Enter content using Markdown syntax..."></textarea>
+                        <textarea id="markdown" name="markdown" rows="10" x-model="form.markdown" placeholder="Enter content using Markdown syntax..."></textarea>
 
                         <label for="content">Content (For Notes):</label>
-                        <textarea id="content" name="content" rows="10" placeholder="Enter raw HTML or alternative content..."></textarea>
+                        <textarea id="content" name="content" rows="5" x-model="form.content" placeholder="Enter raw HTML or alternative content..."></textarea>
 
                         <label for="html">Generated HTML (Read-only):</label>
-                        <textarea id="html" name="html" rows="3" placeholder="This will be auto-generated or manually entered..." readonly></textarea>
-                        
+                        <textarea id="html" name="html" rows="3" x-model="form.html" placeholder="This will be auto-generated or manually entered..." readonly></textarea>
+
                         <div class="form-buttons">
-                            <button type="submit" id="save-button" class="button button-success"><i class="fas fa-save"></i> Add Page</button>
-                            <button type="button" id="clear-button" class="button button-warning"><i class="fas fa-eraser"></i> Clear Form</button>
-                            <a id="site-builder-link" class="button button-primary" href="#" target="_blank" disabled>
+                            <button type="submit" id="save-button" class="button" :class="form.isEditing ? 'button-primary' : 'button-success'" :disabled="isSaving">
+                                <i :class="isSaving ? 'fas fa-spinner fa-spin' : (form.isEditing ? 'fas fa-save' : 'fas fa-plus')"></i>
+                                <span x-text="isSaving ? (form.isEditing ? 'Saving...' : 'Adding...') : (form.isEditing ? 'Save Changes' : 'Add Page')"></span>
+                            </button>
+                            <button type="button" id="clear-button" class="button button-warning" @click="clearForm()" :disabled="isSaving">
+                                <i class="fas fa-eraser"></i> Clear Form
+                            </button>
+                            <a id="site-builder-link" class="button button-primary" :href="siteBuilderUrl" target="_blank" :disabled="!isSiteBuilderEnabled" :class="{ 'button-disabled': !isSiteBuilderEnabled }" :style="{ pointerEvents: isSiteBuilderEnabled ? '' : 'none', opacity: isSiteBuilderEnabled ? 1 : 0.7 }">
                                 <i class="fas fa-palette"></i> Go to Site Builder
                                 <span class="button-hint">(requires Title & Slug)</span>
                             </a>
@@ -100,6 +575,357 @@
         </div> <!-- End Tab Container -->
     </div> <!-- End Container -->
 
-    <script></script>
+    <script>
+    function pageManager() {
+        return {
+            // --- State ---
+            activeTab: 'manage', // 'manage' or 'edit'
+            allPages: [],
+            filteredPages: [],
+            searchTerm: '',
+            isLoading: true,
+            isSaving: false,
+            status: { message: '', type: 'success' }, // type: 'success' or 'error'
+            form: {
+                isEditing: false,
+                originalSlug: '', // Store the original slug when editing
+                title: '',
+                slug: '',
+                tags: '',
+                thumb: '',
+                mediaFile: null,
+                markdown: '',
+                content: '',
+                html: ''
+            },
+            apiBaseUrl: '/admin', // Configurable API base URL
+
+            // --- Computed Properties ---
+            get isSiteBuilderEnabled() {
+                return this.form.title.trim() && this.form.slug.trim();
+            },
+            get siteBuilderUrl() {
+                return this.isSiteBuilderEnabled ? `/site-builder?slug=${encodeURIComponent(this.form.slug)}` : '#';
+            },
+
+            // --- Methods ---
+            init() {
+                console.log('Alpine Page Manager Initializing...');
+                this.fetchPages();
+                // Optionally debounce search input if performance becomes an issue
+                // this.filterPages = Alpine.debounce(this.filterPagesDirect, 300);
+            },
+
+            switchTab(tabName) {
+                this.activeTab = tabName;
+                if (tabName === 'manage' && this.allPages.length === 0 && !this.isLoading) {
+                     // Re-fetch if manage tab is selected and pages weren't loaded previously
+                    this.fetchPages();
+                } else if (tabName === 'manage') {
+                    // Ensure filtering is applied when switching back
+                    this.filterPages();
+                }
+                 // Scroll to top when switching tabs for better UX
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            },
+
+            showStatus(message, type = 'success', duration = 5000) {
+                this.status = { message, type };
+                 // Scroll to top to make status visible
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+
+                // Auto-hide status message
+                setTimeout(() => {
+                    this.status = { message: '', type: 'success' };
+                }, duration);
+            },
+
+            async fetchPages() {
+                this.isLoading = true;
+                try {
+                    const response = await fetch(`${this.apiBaseUrl}/list`);
+                    if (!response.ok) {
+                        const errorData = await response.json().catch(() => ({ detail: 'Unknown error fetching pages' }));
+                        throw new Error(errorData.detail || `HTTP error! status: ${response.status}`);
+                    }
+                    this.allPages = await response.json();
+                    this.allPages.sort((a, b) => a.title.localeCompare(b.title)); // Sort initially
+                    this.filterPages(); // Apply initial filter (which is none)
+                } catch (error) {
+                    console.error('Error fetching pages:', error);
+                    this.showStatus(`Error fetching pages: ${error.message}`, 'error');
+                    this.allPages = [];
+                    this.filteredPages = [];
+                } finally {
+                    this.isLoading = false;
+                }
+            },
+
+            filterPages() {
+                const term = this.searchTerm.toLowerCase().trim();
+                if (!term) {
+                    this.filteredPages = [...this.allPages];
+                } else {
+                    this.filteredPages = this.allPages.filter(page =>
+                        page.title.toLowerCase().includes(term) ||
+                        page.slug.toLowerCase().includes(term) ||
+                        this.parseTagsForDisplay(page.tags).toLowerCase().includes(term)
+                    );
+                }
+            },
+
+            parseTagsForDisplay(tagsData) {
+                // Copied from original utils.js - handles potential JSON string or array
+                if (!tagsData) return '';
+                try {
+                    const tagsArray = (typeof tagsData === 'string') ? JSON.parse(tagsData) : tagsData;
+                    return Array.isArray(tagsArray) ? tagsArray.join(', ') : String(tagsData);
+                } catch (e) {
+                     // Fallback if JSON parsing fails or it's not an array
+                    return String(tagsData);
+                }
+            },
+
+            formatTagsForApi(tagsString) {
+                 // Copied from original utils.js
+                return tagsString.split(',')
+                                .map(tag => tag.trim().toLowerCase())
+                                .filter(tag => tag.length > 0);
+            },
+
+            clearForm() {
+                this.form = {
+                    isEditing: false,
+                    originalSlug: '',
+                    title: '',
+                    slug: '',
+                    tags: '',
+                    thumb: '',
+                    mediaFile: null,
+                    markdown: '',
+                    content: '',
+                    html: ''
+                };
+                 // Reset the file input visually
+                 const fileInput = document.getElementById('media-file');
+                 if (fileInput) fileInput.value = '';
+                // Focus the title field after clearing
+                this.$nextTick(() => document.getElementById('title')?.focus());
+            },
+
+             clearFileSelection() {
+                this.form.mediaFile = null;
+                const fileInput = document.getElementById('media-file');
+                if (fileInput) fileInput.value = ''; // Reset the actual input element
+             },
+
+            prepareNewPage() {
+                this.clearForm();
+                this.switchTab('edit');
+                 this.$nextTick(() => document.getElementById('title')?.focus());
+            },
+
+            prepareEdit(slug) {
+                const pageData = this.allPages.find(p => p.slug === slug);
+                if (!pageData) {
+                    this.showStatus(`Could not find page data for slug: ${slug}`, 'error');
+                    return;
+                }
+
+                this.form = {
+                    isEditing: true,
+                    originalSlug: pageData.slug,
+                    title: pageData.title,
+                    slug: pageData.slug, // Slug is set but readonly in the form
+                    tags: this.parseTagsForDisplay(pageData.tags), // Display comma-separated
+                    thumb: pageData.thumb || '',
+                    mediaFile: null, // Reset file selection when editing
+                    markdown: pageData.markdown || '',
+                    content: pageData.content || '',
+                    html: pageData.html || ''
+                };
+                const fileInput = document.getElementById('media-file');
+                 if (fileInput) fileInput.value = ''; // Clear file input on edit load
+
+                this.switchTab('edit');
+                // Scroll form into view smoothly
+                this.$nextTick(() => {
+                     document.getElementById('edit-area')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                 });
+            },
+
+             handleFileSelect(event) {
+                if (event.target.files.length > 0) {
+                    this.form.mediaFile = event.target.files[0];
+                    this.form.thumb = ''; // Clear direct link if file is selected
+                } else {
+                    this.form.mediaFile = null;
+                }
+            },
+
+            async postMedia(file) {
+                 // Simplified version of original fileHandler.js
+                const formData = new FormData();
+                formData.append("file", file);
+                this.isSaving = true; // Indicate activity during upload
+
+                try {
+                    const response = await fetch("/media/", { // Assuming '/media/' endpoint
+                        method: "POST",
+                        body: formData
+                    });
+                    if (!response.ok) {
+                         const errorData = await response.json().catch(() => ({ detail: `Upload failed with status: ${response.status}` }));
+                        throw new Error(errorData.detail || `Upload failed: ${response.statusText}`);
+                    }
+                    const result = await response.json();
+                    console.log("Upload success:", result);
+                    return result; // Expected { filename: 'path/to/file.jpg' }
+                } catch (error) {
+                    console.error("Error uploading file:", error);
+                    this.showStatus(`Media upload failed: ${error.message}`, 'error');
+                    return null;
+                } finally {
+                     // We leave isSaving true as the main save operation continues
+                     // It will be set to false in savePage's finally block
+                }
+            },
+
+            async savePage() {
+                if (this.isSaving) return; // Prevent double submission
+
+                this.isSaving = true;
+                let effectiveThumb = this.form.thumb.trim(); // Start with the direct link
+
+                 // --- File Upload Step ---
+                if (this.form.mediaFile) {
+                    const uploadResult = await this.postMedia(this.form.mediaFile);
+                    if (uploadResult && uploadResult.filename) {
+                        // Prefer uploaded file path if successful
+                         effectiveThumb = `/media/${uploadResult.filename}`;
+                    } else {
+                         // Upload failed, stop the save process
+                         this.isSaving = false;
+                         // postMedia already showed an error status
+                         return;
+                    }
+                 }
+
+                // --- Prepare Payload ---
+                const payload = {
+                    title: this.form.title.trim(),
+                    slug: this.form.slug.trim(), // Slug is not editable but sent anyway
+                    tags: this.formatTagsForApi(this.form.tags), // Format for backend
+                    markdown: this.form.markdown.trim(),
+                    content: this.form.content.trim(),
+                    thumb: effectiveThumb,
+                    html: this.form.html.trim() // Usually generated backend, but send if needed
+                };
+
+                // --- Validation ---
+                if (!payload.title || !payload.slug) {
+                    this.showStatus("Title and Slug are required.", 'error');
+                    this.isSaving = false;
+                    return;
+                }
+                // Slug format check (though it should be correct due to input handling)
+                if (!/^[a-z0-9\-]+$/.test(payload.slug)) {
+                    this.showStatus("Slug can only contain lowercase letters, numbers, and hyphens.", 'error');
+                    this.isSaving = false;
+                    return;
+                }
+
+                // --- API Call ---
+                let requestUrl;
+                let requestMethod;
+                if (this.form.isEditing) {
+                    requestUrl = `${this.apiBaseUrl}/update/${this.form.originalSlug}`;
+                    requestMethod = 'PUT';
+                } else {
+                    requestUrl = `${this.apiBaseUrl}/add`;
+                    requestMethod = 'POST';
+                }
+
+                try {
+                    const response = await fetch(requestUrl, {
+                        method: requestMethod,
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+
+                    const result = await response.json();
+
+                    if (!response.ok) {
+                         // Handle potential FastAPI validation errors (list of objects)
+                         let errorMsg = result.detail;
+                         if (Array.isArray(errorMsg) && errorMsg.length > 0) {
+                             errorMsg = errorMsg.map(err => `${err.loc?.[err.loc.length - 1] || 'field'}: ${err.msg}`).join('; ');
+                         } else if (typeof errorMsg !== 'string') {
+                             errorMsg = `An unexpected error occurred. Status: ${response.status}`;
+                         }
+                        throw new Error(errorMsg);
+                    }
+
+                    this.showStatus(result.message || `Page ${this.form.isEditing ? 'updated' : 'added'} successfully.`, 'success');
+
+                    // Refresh the page list
+                    await this.fetchPages(); // Use await to ensure list is updated before potential tab switch
+
+                    if (this.form.isEditing) {
+                        // Update form state if slug was hypothetically changeable (it's not here)
+                         // Or simply keep editing the current page
+                         this.prepareEdit(payload.slug); // Re-prepare with potentially updated data (like thumb from upload)
+                         this.switchTab('edit'); // Stay on edit tab
+                    } else {
+                        this.prepareNewPage(); // Clear form for next addition
+                        this.switchTab('manage'); // Switch back to the list view after adding
+                    }
+
+
+                } catch (error) {
+                    console.error(`Error ${this.form.isEditing ? 'updating' : 'adding'} page:`, error);
+                    this.showStatus(`Error: ${error.message}`, 'error');
+                } finally {
+                    this.isSaving = false;
+                }
+            },
+
+            async deletePage(slug) {
+                 if (!confirm(`Are you sure you want to delete the page "${slug}"? This action cannot be undone.`)) {
+                    return;
+                }
+                 this.isLoading = true; // Show loading state during deletion
+
+                try {
+                    const response = await fetch(`${this.apiBaseUrl}/delete/${slug}`, {
+                        method: 'DELETE',
+                    });
+                    const result = await response.json();
+                    if (!response.ok) {
+                        throw new Error(result.detail || `HTTP error! status: ${response.status}`);
+                    }
+                    this.showStatus(result.message || `Page '${slug}' deleted successfully.`, 'success');
+
+                    // If the deleted page was being edited, clear the form
+                    if (this.form.isEditing && this.form.originalSlug === slug) {
+                        this.clearForm();
+                         // Optionally switch back to manage tab if form was cleared
+                         this.switchTab('manage');
+                    }
+
+                     // Fetch updated list after deletion
+                     await this.fetchPages(); // Await ensures the list updates before UI settles
+
+
+                } catch (error) {
+                    console.error('Error deleting page:', error);
+                    this.showStatus(`Error deleting page: ${error.message}`, 'error');
+                     this.isLoading = false; // Ensure loading state is reset on error
+                }
+                 // No finally block for isLoading = false, as fetchPages handles it
+            }
+        }
+    }
+    </script>
 </body>
 </html>
