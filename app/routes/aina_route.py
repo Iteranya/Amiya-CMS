@@ -49,9 +49,9 @@ async def get_html(request: Request):
     # Inject the slug value into the HTML
     if slug != "" and slug != None:
         page: Page = get_page_by_slug(slug)
-    else:
-        page:Page = Page(title = slug, slug = slug)
-        create_page(page)
+        if page == None:
+            page:Page = Page(title = slug, slug = slug)
+            create_page(page)
 
     html_content = page.html
     # Sanitize and escape the slug for HTML attribute
