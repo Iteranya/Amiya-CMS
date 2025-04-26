@@ -6,11 +6,12 @@ from fastapi import APIRouter, Form, Body, HTTPException, Request
 from fastapi.responses import HTMLResponse, StreamingResponse
 from pathlib import Path
 from app.aina import generate_html_stream, active_generations, save_html, title_to_filename
-from app.crud import get_page_by_slug
+from app.crud import get_page_by_slug, create_page
 import traceback
 from app.bundler import StaticBundler
 from app.models import Page
 router = APIRouter()
+from html import escape
 
 @router.post("/save-html")
 async def deploy_site(
@@ -46,31 +47,31 @@ async def get_html(request: Request):
     slug = request.query_params.get("slug", "")
 
     # Inject the slug value into the HTML
-    if slug != "":
+    if slug != "" and slug != None:
         page: Page = get_page_by_slug(slug)
-        html_content = page.html
-        
-        # Sanitize and escape the slug for HTML attribute
-        from html import escape
-        escaped_slug = escape(slug)
+    else:
+        page:Page = Page(title = slug, slug = slug)
+        create_page(page)
 
-        safe_html_content = json.dumps(html_content)
+    html_content = page.html
+    # Sanitize and escape the slug for HTML attribute
+    escaped_slug = escape(slug)
+    safe_html_content = json.dumps(html_content)
 
-        # Escape any closing script tags so it won't terminate the <script> block
-        safe_html_content = safe_html_content.replace("</script>", "<\\/script>")
+    # Escape any closing script tags so it won't terminate the <script> block
+    safe_html_content = safe_html_content.replace("</script>", "<\\/script>")
 
-        html = html.replace(
-            'const editingHTML = ""',
-            f'const editingHTML = {safe_html_content}'
-        )
-        
-        # Update the input field with escaped slug
-        html = html.replace(
-            '<input type="text" id="site-title" class="form-control" placeholder="Enter site title (e.g. my-kawaii-page)" style="max-width: 400px; margin: 0 auto;">',
-            f'<input type="text" id="site-title" class="form-control" placeholder="Enter site title (e.g. my-kawaii-page)" style="max-width: 400px; margin: 0 auto;" value="{escaped_slug}">'
-        )
-
+    html = html.replace(
+        'const editingHTML = ""',
+        f'const editingHTML = {safe_html_content}'
+    )
     
+    # Update the input field with escaped slug
+    html = html.replace(
+        '<input type="text" id="site-title" class="form-control" placeholder="Enter site title (e.g. my-kawaii-page)" style="max-width: 400px; margin: 0 auto;">',
+        f'<input type="text" id="site-title" class="form-control" placeholder="Enter site title (e.g. my-kawaii-page)" style="max-width: 400px; margin: 0 auto;" value="{escaped_slug}">'
+    )
+            
     return html
 
 @router.post("/generate-website")
