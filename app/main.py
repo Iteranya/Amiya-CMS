@@ -5,7 +5,7 @@ from fastapi.responses import HTMLResponse, FileResponse
 from app.crud import get_page_by_slug, list_pages
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
-from app.routes import admin_route, aina_route, aiconfig_route, media_route, login_route,setup_route
+from app.routes import admin_route, aina_route, aiconfig_route, media_route, login_route,setup_route,public_route
 from app.generator import generate_markdown_page
 from fastapi.templating import Jinja2Templates
 from app.auth import Depends,get_current_user
@@ -37,6 +37,7 @@ templates = Jinja2Templates(directory="templates")
 app.include_router(setup_route.router)
 app.include_router(media_route.router)
 app.include_router(login_route.router)
+app.include_router(public_route.router)
 
 # Protected Routers
 app.include_router(
@@ -64,12 +65,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-# Root: simple welcome or site list
-@app.get("/", response_class=HTMLResponse)
-async def home(request: Request):
-    pages = list_pages()
-    return templates.TemplateResponse("index.html", {"request": request, "pages": pages})
 
 # Dynamic route to serve saved pages as raw HTML
 @app.get("/site/{slug}", response_class=HTMLResponse)
