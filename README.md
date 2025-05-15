@@ -78,3 +78,30 @@ AGPL-3 (Kal'tsit insisted)
 [Iteranya](https://github.com/Iteranya) with help from Amiya's questionable coding skills
 
 *"I hope you like it, Doctor"* 🐇
+
+# ⚠️ Important Notice: Amiya CMS is Now Archived
+
+**Amiya has teamed up with Asta and Aina to create something even better!** 
+
+## 🎀 Introducing [Anita CMS](https://github.com/Iteranya/anita-cms) - The Next Evolution
+
+### Why Switch?
+- **Everything Amiya offered** - but more stable
+- **SQLite database** - no more TinyDB limitations
+- **One-click installer** - simpler than ever
+- **Combined powers** of Amiya, Asta, and Aina
+- **Active development** - with regular updates
+
+### Upgrade Benefits:
+✅ **Faster performance**  
+✅ **Better security**  
+✅ **More features**  
+✅ **Continued support**  
+
+*"Why the FUCK did I use TinyDB!?"* - The dev, 34 hours without sleep
+
+---
+
+**Amiya CMS will remain available** for historical/educational purposes, but all new development has moved to [Anita CMS](https://github.com/Iteranya/anita-cms).
+
+```
